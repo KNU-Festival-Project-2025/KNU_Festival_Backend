@@ -1,5 +1,5 @@
 ### SpringBoot 직접 추가 내용 ###
-*.yml
+src/main/resources/application.yml
 HELP.md
 .gradle
 build/

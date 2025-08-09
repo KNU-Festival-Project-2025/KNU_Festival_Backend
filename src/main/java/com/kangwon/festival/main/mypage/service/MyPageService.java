@@ -1,12 +1,14 @@
 package com.kangwon.festival.main.mypage.service;
 
+
+import com.kangwon.festival.global.entity.UserInfo;
 import com.kangwon.festival.global.exception.Code;
-import com.kangwon.festival.global.exception.InvalidInputException;
 import com.kangwon.festival.global.exception.ServiceException;
-import com.kangwon.festival.main.mypage.domain.*;
-import com.kangwon.festival.main.mypage.repository.GuestbookRepository;
-import com.kangwon.festival.main.mypage.repository.UserBlockRepository;
-import com.kangwon.festival.main.mypage.repository.UserInfoRepository;
+import com.kangwon.festival.main.mypage.dto.GuestbookResponse;
+import com.kangwon.festival.main.mypage.dto.UserBlockResponse;
+import com.kangwon.festival.main.mypage.repository.MypageGuestbookRepository;
+import com.kangwon.festival.main.mypage.repository.MypageUserBlockRepository;
+import com.kangwon.festival.main.mypage.repository.MypageUserInfoRepository;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -19,9 +21,9 @@ import java.util.NoSuchElementException;
 @RequiredArgsConstructor
 public class MyPageService {
 
-    private final UserInfoRepository userInfoRepository;
-    private final GuestbookRepository guestbookRepository;
-    private final UserBlockRepository userBlockRepository;
+    private final MypageUserInfoRepository userInfoRepository;
+    private final MypageGuestbookRepository guestbookRepository;
+    private final MypageUserBlockRepository userBlockRepository;
 
     public void updateNickname(int userId, String newNickname){
         UserInfo user = userInfoRepository.findById(userId)

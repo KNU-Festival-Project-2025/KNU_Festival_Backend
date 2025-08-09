@@ -1,10 +1,7 @@
 package com.kangwon.festival.main.mypage.controller;
 
-import com.kangwon.festival.main.mypage.domain.GuestbookInfo;
-import com.kangwon.festival.main.mypage.domain.GuestbookResponse;
-import com.kangwon.festival.main.mypage.domain.UserBlock;
-import com.kangwon.festival.main.mypage.domain.UserBlockResponse;
-import com.kangwon.festival.main.mypage.repository.UserInfoRepository;
+import com.kangwon.festival.main.mypage.dto.GuestbookResponse;
+import com.kangwon.festival.main.mypage.dto.UserBlockResponse;
 import com.kangwon.festival.main.mypage.service.MyPageService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;

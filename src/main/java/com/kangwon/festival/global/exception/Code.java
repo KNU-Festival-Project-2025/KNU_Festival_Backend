@@ -25,6 +25,10 @@ public enum Code {
      */
     //유효하지 않은(잘못된) 입력값(40000 ~ 40099번대)
     INVALID_INPUT(HttpStatus.BAD_REQUEST, 40000, "잘못된 값이 존재합니다."),
+    DUPLICATE_NICKNAME(HttpStatus.BAD_REQUEST, 40001, "이미 사용 중인 닉네임입니다."),
+    SAME_NICKNAME(HttpStatus.BAD_REQUEST, 40002, "동일한 닉네임으로 변경할 수 없습니다."),
+    USER_ALREADY_BANNED(HttpStatus.BAD_REQUEST, 40003, "이미 차단된 사용자입니다."),
+
 
     //유효하지 않은 리소스(40100 ~ 40199번대)
     CAN_NOT_FIND_RESOURCE(HttpStatus.BAD_REQUEST, 40100, "해당 리소스를 찾을 수 없습니다."),

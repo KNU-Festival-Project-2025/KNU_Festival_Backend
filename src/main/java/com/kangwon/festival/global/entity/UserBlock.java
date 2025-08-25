@@ -10,7 +10,7 @@ import java.time.LocalDateTime;
 @Getter
 @Setter
 @Table(name = "user_block")
-public class UserBlock {
+public class UserBlock extends BaseTime {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -24,7 +24,5 @@ public class UserBlock {
     @JoinColumn(name = "blocked_user_id", nullable = false)
     private UserInfo blocked;
 
-    @Column(nullable = false)
-    private LocalDateTime createdAt = LocalDateTime.now();
 
 }

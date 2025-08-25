@@ -40,7 +40,6 @@ public class MyPageService {
         }
 
         user.setUserNickname(newNickname);
-        user.setUpdatedAt(LocalDateTime.now());
         userInfoRepository.save(user);
     }
 
@@ -57,7 +56,6 @@ public class MyPageService {
 
         // 탈퇴 처리
         user.setDeleted(true); // isDeleted = true
-        user.setUpdatedAt(LocalDateTime.now());
 
         userInfoRepository.save(user);
     }
@@ -75,8 +73,8 @@ public class MyPageService {
                         g.isGuestbookIsAnonymous(),
                         g.getGuestbookTitle(),
                         g.getGuestbookContent(),
-                        g.getCreatedAt(),
-                        g.getUpdatedAt()
+                        g.getCreatedDateTime(),
+                        g.getModifiedDateTime()
                 ))
                 .toList();
     }
@@ -93,7 +91,7 @@ public class MyPageService {
                         b.getBlocker().getUserNickname(),
                         b.getBlocked().getUserId(),
                         b.getBlocked().getUserNickname(),
-                        b.getCreatedAt()
+                        b.getCreatedDateTime()
                 ))
                 .toList();
     }

@@ -18,5 +18,5 @@ public class UserBlockResponse {
     private Integer blockedId;
     private String blockedNickname;
 
-    private LocalDateTime createdAt;
+    private LocalDateTime createdDateTime;
 }

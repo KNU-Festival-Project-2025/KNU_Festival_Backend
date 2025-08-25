@@ -35,7 +35,7 @@ public class AdminUserService {
                         report.getReportedUser().getUserId(),
                         report.getReportedUser().getUserNickname(),
                         report.getReportedUser().isBanned(),
-                        report.getCreatedAt()
+                        report.getCreatedDateTime()
                 ))
                 .toList();
     }
@@ -55,7 +55,7 @@ public class AdminUserService {
                         report.getReportedUser().getUserId(),
                         report.getReportedUser().getUserNickname(),
                         report.getReportedUser().isBanned(),
-                        report.getCreatedAt()
+                        report.getCreatedDateTime()
                 ))
                 .toList();
     }
@@ -71,7 +71,7 @@ public class AdminUserService {
                         block.getBlocked().getUserId(),
                         block.getBlocked().getUserNickname(),
                         block.getBlocked().isBanned(),
-                        block.getCreatedAt()
+                        block.getCreatedDateTime()
                 ))
                 .toList();
     }
@@ -89,7 +89,7 @@ public class AdminUserService {
                         block.getBlocked().getUserId(),
                         block.getBlocked().getUserNickname(),
                         block.getBlocked().isBanned(),
-                        block.getCreatedAt()
+                        block.getCreatedDateTime()
                 ))
                 .toList();
     }

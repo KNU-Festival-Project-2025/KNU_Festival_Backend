@@ -19,5 +19,5 @@ public class UserReportResponse {
     private String reportedUserNickname;
     private boolean reportedUserBanned;
 
-    private LocalDateTime createdAt;
+    private LocalDateTime createdDateTime;
 }

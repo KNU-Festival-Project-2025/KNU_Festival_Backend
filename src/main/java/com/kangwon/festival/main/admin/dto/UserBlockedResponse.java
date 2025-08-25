@@ -16,6 +16,6 @@ public class UserBlockedResponse {
 
     private boolean blockedUserBanned;
 
-    private LocalDateTime createdAt;
+    private LocalDateTime createdDateTime;
 
 }

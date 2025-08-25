@@ -11,7 +11,7 @@ import java.time.LocalDateTime;
 @Getter
 @Setter
 @Table(name = "user_info")
-public class UserInfo {
+public class UserInfo extends BaseTime {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -32,10 +32,5 @@ public class UserInfo {
     @Column(name = "user_is_banned", nullable = false)
     private boolean banned = false;
 
-    @Column(nullable = false)
-    private LocalDateTime createdAt = LocalDateTime.now();
-
-    @Column(nullable = false)
-    private LocalDateTime updatedAt = LocalDateTime.now();
 
 }

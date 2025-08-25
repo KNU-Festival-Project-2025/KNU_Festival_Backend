@@ -10,7 +10,7 @@ import java.time.LocalDateTime;
 @Getter
 @Setter
 @Table(name = "notice_info")
-public class NoticeInfo {
+public class NoticeInfo extends BaseTime {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -22,10 +22,5 @@ public class NoticeInfo {
     @Column(nullable = false, columnDefinition = "TEXT")
     private String noticeContent;
 
-    @Column(nullable = false)
-    private LocalDateTime createdAt;
-
-    @Column(nullable = false)
-    private LocalDateTime updatedAt;
 
 }

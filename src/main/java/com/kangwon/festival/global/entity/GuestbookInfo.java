@@ -10,7 +10,7 @@ import java.time.LocalDateTime;
 @Getter
 @Setter
 @Table(name = "guestbook_info")
-public class GuestbookInfo {
+public class GuestbookInfo extends BaseTime {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer guestbookId;
@@ -28,9 +28,4 @@ public class GuestbookInfo {
     @Column(nullable = false, columnDefinition = "TEXT")
     private String guestbookContent;
 
-    @Column(nullable = false)
-    private LocalDateTime createdAt;
-
-    @Column(nullable = false)
-    private LocalDateTime updatedAt;
 }

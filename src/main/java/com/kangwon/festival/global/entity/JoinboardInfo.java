@@ -10,7 +10,7 @@ import java.time.LocalDateTime;
 @Getter
 @Setter
 @Table(name = "joinboard_info")
-public class JoinboardInfo {
+public class JoinboardInfo extends BaseTime {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -27,11 +27,5 @@ public class JoinboardInfo {
     private boolean joinboardTable;
 
     private Integer joinboardHeadcount;
-
-    @Column(nullable = false)
-    private LocalDateTime createdAt;
-
-    @Column(nullable = false)
-    private LocalDateTime updatedAt;
 
 }

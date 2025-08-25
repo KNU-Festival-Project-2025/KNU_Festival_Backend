@@ -12,5 +12,5 @@ public class ReportResponse {
     private Integer reportedUserId;
     private Integer reporterUserId;
     private String reason;
-    private LocalDateTime createdAt;
+    private LocalDateTime createdDateTime;
 }

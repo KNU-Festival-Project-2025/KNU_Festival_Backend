@@ -16,6 +16,6 @@ public class GuestbookResponse {
     private boolean guestbookIsAnonymous;
     private String guestbookTitle;
     private String guestbookContent;
-    private LocalDateTime createdAt;
-    private LocalDateTime updatedAt;
+    private LocalDateTime createdDateTime;
+    private LocalDateTime modifiedDateTime;
 }

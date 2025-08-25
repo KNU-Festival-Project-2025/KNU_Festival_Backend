@@ -10,7 +10,7 @@ import java.time.LocalDateTime;
 @Getter
 @Setter
 @Table(name = "user_report")
-public class UserReport {
+public class UserReport extends BaseTime {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -26,8 +26,5 @@ public class UserReport {
 
     @Column(nullable = false, columnDefinition = "TEXT")
     private String reportReason;
-
-    @Column(nullable = false)
-    private LocalDateTime createdAt = LocalDateTime.now();
 
 }

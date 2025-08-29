@@ -1,19 +1,19 @@
 package com.kangwon.festival.main.admin.service;
 
-import com.kangwon.festival.global.exception.Code;
+import com.kangwon.festival.global.annotation.MethodDescription;
 import com.kangwon.festival.global.exception.ServiceException;
-import com.kangwon.festival.global.entity.UserBlock;
-import com.kangwon.festival.global.entity.UserReport;
 import com.kangwon.festival.main.admin.dto.UserBlockedResponse;
 import com.kangwon.festival.main.admin.dto.UserReportResponse;
 import com.kangwon.festival.main.admin.repository.AdminUserBlockRepository;
 import com.kangwon.festival.main.admin.repository.AdminUserInfoRepository;
 import com.kangwon.festival.main.admin.repository.AdminUserReportRepository;
 import com.kangwon.festival.global.entity.UserInfo;
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
-
 import java.util.List;
+
+import static com.kangwon.festival.global.exception.Code.*;
 
 @Service
 @RequiredArgsConstructor
@@ -23,7 +23,7 @@ public class AdminUserService {
     private final AdminUserBlockRepository userBlockRepository;
     private final AdminUserInfoRepository userInfoRepository;
 
-    // 모든 신고 내역
+    @MethodDescription(description = "모든 신고내역을 조회합니다.")
     public List<UserReportResponse> getAllReports() {
         return userReportRepository.findAll()
                 .stream()
@@ -40,10 +40,10 @@ public class AdminUserService {
                 .toList();
     }
 
-    // 특정 유저의 신고 내역
+    @MethodDescription(description = "특정 유저의 신고내역을 조회합니다.")
     public List<UserReportResponse> getReportsByUser(int reportedUserId) {
         UserInfo reportedUser = userInfoRepository.findById(reportedUserId)
-                .orElseThrow(() -> new ServiceException(Code.CAN_NOT_FIND_USER));
+                .orElseThrow(() -> new ServiceException(CAN_NOT_FIND_USER));
 
         return userReportRepository.findByReportedUser(reportedUser)
                 .stream()
@@ -60,7 +60,7 @@ public class AdminUserService {
                 .toList();
     }
 
-    // 모든 차단 내역
+    @MethodDescription(description = "모든 차단내역을 조회합니다.")
     public List<UserBlockedResponse> getAllBlocks() {
         return userBlockRepository.findAll()
                 .stream()
@@ -76,10 +76,10 @@ public class AdminUserService {
                 .toList();
     }
 
-    // 특정 유저 차단 내역
+    @MethodDescription(description = "특정 유저의 차단내역을 조회합니다.")
     public List<UserBlockedResponse> getBlocksByBlockedUser(int blockedUserId) {
         UserInfo blockedUser = userInfoRepository.findById(blockedUserId)
-                .orElseThrow(() -> new ServiceException(Code.CAN_NOT_FIND_BLOCKED_USER));
+                .orElseThrow(() -> new ServiceException(CAN_NOT_FIND_BLOCKED_USER));
         return userBlockRepository.findByBlocked(blockedUser)
                 .stream()
                 .map(block -> new UserBlockedResponse(
@@ -94,27 +94,28 @@ public class AdminUserService {
                 .toList();
     }
 
-    // 전체 유저 조회
+    @MethodDescription(description = "전체 유저를 조회합니다.")
     public List<UserInfo> getAllUser() {
         return userInfoRepository.findAll();
     }
 
-    // 특정 유저 조회
+    @MethodDescription(description = "특정 유저를 조회합니다.")
     public UserInfo getUser(int userId) {
         return userInfoRepository.findById(userId)
-                .orElseThrow(() -> new ServiceException(Code.CAN_NOT_FIND_USER));
+                .orElseThrow(() -> new ServiceException(CAN_NOT_FIND_USER));
     }
 
-    // 유저 이용 차단
+    @Transactional
+    @MethodDescription(description = "유저 이용을 차단합니다.")
     public void banUser(int userId) {
         UserInfo user = userInfoRepository.findById(userId)
-                .orElseThrow(() -> new ServiceException(Code.CAN_NOT_FIND_USER));
+                .orElseThrow(() -> new ServiceException(CAN_NOT_FIND_USER));
 
         if (user.isBanned()) {
-            throw new ServiceException(Code.USER_ALREADY_BANNED);
+            throw new ServiceException(USER_ALREADY_BANNED);
         }
 
-        user.setBanned(true);
+        user.setBanned(true); // 수정 필요
         userInfoRepository.save(user);
     }
 

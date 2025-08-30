@@ -27,16 +27,7 @@ public class AdminUserService {
     public List<UserReportResponse> getAllReports() {
         return userReportRepository.findAll()
                 .stream()
-                .map(report -> new UserReportResponse(
-                        report.getUserReportId(),
-                        report.getReporter().getUserId(),
-                        report.getReporter().getUserNickname(),
-                        report.getReportReason(),
-                        report.getReportedUser().getUserId(),
-                        report.getReportedUser().getUserNickname(),
-                        report.getReportedUser().isBanned(),
-                        report.getCreatedDateTime()
-                ))
+                .map(UserReportResponse::from)
                 .toList();
     }
 
@@ -47,16 +38,7 @@ public class AdminUserService {
 
         return userReportRepository.findByReportedUser(reportedUser)
                 .stream()
-                .map(report -> new UserReportResponse(
-                        report.getUserReportId(),
-                        report.getReporter().getUserId(),
-                        report.getReporter().getUserNickname(),
-                        report.getReportReason(),
-                        report.getReportedUser().getUserId(),
-                        report.getReportedUser().getUserNickname(),
-                        report.getReportedUser().isBanned(),
-                        report.getCreatedDateTime()
-                ))
+                .map(UserReportResponse::from)
                 .toList();
     }
 
@@ -64,15 +46,7 @@ public class AdminUserService {
     public List<UserBlockedResponse> getAllBlocks() {
         return userBlockRepository.findAll()
                 .stream()
-                .map(block -> new UserBlockedResponse(
-                        block.getUserBlockId(),
-                        block.getBlocker().getUserId(),
-                        block.getBlocker().getUserNickname(),
-                        block.getBlocked().getUserId(),
-                        block.getBlocked().getUserNickname(),
-                        block.getBlocked().isBanned(),
-                        block.getCreatedDateTime()
-                ))
+                .map(UserBlockedResponse::from)
                 .toList();
     }
 
@@ -82,15 +56,7 @@ public class AdminUserService {
                 .orElseThrow(() -> new ServiceException(CAN_NOT_FIND_BLOCKED_USER));
         return userBlockRepository.findByBlocked(blockedUser)
                 .stream()
-                .map(block -> new UserBlockedResponse(
-                        block.getUserBlockId(),
-                        block.getBlocker().getUserId(),
-                        block.getBlocker().getUserNickname(),
-                        block.getBlocked().getUserId(),
-                        block.getBlocked().getUserNickname(),
-                        block.getBlocked().isBanned(),
-                        block.getCreatedDateTime()
-                ))
+                .map(UserBlockedResponse::from)
                 .toList();
     }
 
@@ -115,8 +81,7 @@ public class AdminUserService {
             throw new ServiceException(USER_ALREADY_BANNED);
         }
 
-        user.setBanned(true); // 수정 필요
-        userInfoRepository.save(user);
+        user.ban(); // 수정 필요
     }
 
 }

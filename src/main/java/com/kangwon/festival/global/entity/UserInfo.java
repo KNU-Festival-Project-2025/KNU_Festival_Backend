@@ -1,15 +1,15 @@
 package com.kangwon.festival.global.entity;
 
 import jakarta.persistence.*;
+import lombok.AccessLevel;
 import lombok.Getter;
-import lombok.Setter;
+import lombok.NoArgsConstructor;
 
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 
 @Entity
 @Getter
-@Setter
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Table(name = "user_info")
 public class UserInfo extends BaseTime {
 
@@ -31,6 +31,27 @@ public class UserInfo extends BaseTime {
 
     @Column(name = "user_is_banned", nullable = false)
     private boolean banned = false;
+
+    public void ban() {
+        this.banned = true;
+    }
+
+    public void unban() {
+        this.banned = false;
+    }
+
+    public void changeNickname(String newNickname) {
+        if (newNickname == null || newNickname.isBlank())
+            return;
+        this.userNickname = newNickname;
+    }
+
+    public void delete() {
+        this.deleted = true;
+    }
+    public void restore() {
+        this.deleted = false;
+    }
 
 
 }

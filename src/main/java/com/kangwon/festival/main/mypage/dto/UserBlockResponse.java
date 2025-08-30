@@ -1,5 +1,7 @@
 package com.kangwon.festival.main.mypage.dto;
 
+import com.kangwon.festival.global.entity.UserBlock;
+import com.kangwon.festival.main.admin.dto.UserBlockedResponse;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
@@ -19,4 +21,15 @@ public class UserBlockResponse {
     private String blockedNickname;
 
     private LocalDateTime createdDateTime;
+
+    public static UserBlockResponse from(UserBlock b) {
+        return new UserBlockResponse(
+                b.getUserBlockId(),
+                b.getBlocker().getUserId(),
+                b.getBlocker().getUserNickname(),
+                b.getBlocked().getUserId(),
+                b.getBlocked().getUserNickname(),
+                b.getCreatedDateTime()
+        );
+    }
 }

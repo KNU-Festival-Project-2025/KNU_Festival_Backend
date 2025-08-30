@@ -19,6 +19,7 @@ import static com.kangwon.festival.global.exception.Code.*;
 
 @Service
 @RequiredArgsConstructor
+@Transactional
 public class MyPageService {
 
     private final MypageUserInfoRepository userInfoRepository;
@@ -39,8 +40,7 @@ public class MyPageService {
             throw new ServiceException(DUPLICATE_NICKNAME);
         }
 
-        user.setUserNickname(newNickname);
-        userInfoRepository.save(user);
+        user.changeNickname(newNickname);
     }
 
     // 회원 탈퇴
@@ -55,9 +55,7 @@ public class MyPageService {
         }
 
         // 탈퇴 처리
-        user.setDeleted(true); // isDeleted = true
-
-        userInfoRepository.save(user);
+        user.delete();
     }
 
     // 내 방명록 조회
@@ -66,16 +64,7 @@ public class MyPageService {
                 .orElseThrow(() -> new ServiceException(CAN_NOT_FIND_USER));
 
         return guestbookRepository.findByUser(user).stream()
-                .map(g -> new GuestbookResponse(
-                        g.getGuestbookId(),
-                        g.getUser().getUserNickname(),
-                        g.getUser().getUserId(),
-                        g.isGuestbookIsAnonymous(),
-                        g.getGuestbookTitle(),
-                        g.getGuestbookContent(),
-                        g.getCreatedDateTime(),
-                        g.getModifiedDateTime()
-                ))
+                .map(GuestbookResponse::from)
                 .toList();
     }
 
@@ -85,14 +74,7 @@ public class MyPageService {
                 .orElseThrow(() -> new ServiceException(CAN_NOT_FIND_USER));
 
         return userBlockRepository.findByBlocker(user).stream()
-                .map(b -> new UserBlockResponse(
-                        b.getUserBlockId(),
-                        b.getBlocker().getUserId(),
-                        b.getBlocker().getUserNickname(),
-                        b.getBlocked().getUserId(),
-                        b.getBlocked().getUserNickname(),
-                        b.getCreatedDateTime()
-                ))
+                .map(UserBlockResponse::from)
                 .toList();
     }
 

@@ -26,7 +26,7 @@ public class AdminUserController {
 
     // 신고된 특정 유저 조회
     @GetMapping("/reports/{userId}")
-    public ResponseEntity<List<UserReportResponse>> getReportsByUser(@PathVariable int userId) {
+    public ResponseEntity<List<UserReportResponse>> getReportsByUser(@PathVariable Long userId) {
         return ResponseEntity.ok(adminUserService.getReportsByUser(userId));
     }
 
@@ -39,7 +39,7 @@ public class AdminUserController {
 
     // 차단된 특정 유저 조회
     @GetMapping("/blocked/{userId}")
-    public ResponseEntity<List<UserBlockedResponse>> getBlocksByBlockedUser(@PathVariable int userId) {
+    public ResponseEntity<List<UserBlockedResponse>> getBlocksByBlockedUser(@PathVariable Long userId) {
         return ResponseEntity.ok(adminUserService.getBlocksByBlockedUser(userId));
     }
 
@@ -51,14 +51,14 @@ public class AdminUserController {
 
     // 유저 조회(차단용)
     @GetMapping("/userList/{userId}")
-    public ResponseEntity<UserInfo> getUser(@PathVariable int userId) {
+    public ResponseEntity<UserInfo> getUser(@PathVariable Long userId) {
         return ResponseEntity.ok(adminUserService.getUser(userId));
     }
 
 
     // 유처 이용 차단하기
     @PatchMapping("/userList/{userId}/ban")
-    public ResponseEntity<String> banUser(@PathVariable int userId) {
+    public ResponseEntity<String> banUser(@PathVariable Long userId) {
         adminUserService.banUser(userId);
         return ResponseEntity.ok("차단이 완료되었습니다.");
     }

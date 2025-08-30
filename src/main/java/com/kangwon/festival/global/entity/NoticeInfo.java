@@ -15,7 +15,7 @@ public class NoticeInfo extends BaseTime {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer noticeId;
+    private Long noticeId;
 
     @Column(nullable = false)
     private String noticeTitle;

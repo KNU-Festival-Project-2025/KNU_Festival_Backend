@@ -12,12 +12,12 @@ import java.time.LocalDateTime;
 @Setter
 @AllArgsConstructor
 public class UserBlockResponse {
-    private Integer userBlockId;
+    private Long userBlockId;
 
-    private Integer blockerId;
+    private Long blockerId;
     private String blockerNickname;
 
-    private Integer blockedId;
+    private Long blockedId;
     private String blockedNickname;
 
     private LocalDateTime createdDateTime;

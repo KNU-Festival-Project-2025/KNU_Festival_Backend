@@ -16,7 +16,7 @@ public class UserReport extends BaseTime {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer userReportId;
+    private Long userReportId;
 
     @ManyToOne
     @JoinColumn(name = "reporter_id", nullable = false)

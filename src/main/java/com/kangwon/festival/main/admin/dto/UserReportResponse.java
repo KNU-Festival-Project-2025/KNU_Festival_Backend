@@ -9,14 +9,14 @@ import java.time.LocalDateTime;
 @Getter
 @AllArgsConstructor
 public class UserReportResponse {
-    private int userReportId;
+    private Long userReportId;
 
-    private int reporterId;
+    private Long reporterId;
     private String reporterNickname;
 
     private String reportReason;
 
-    private int reportedUserId;
+    private Long reportedUserId;
     private String reportedUserNickname;
     private boolean reportedUserBanned;
 

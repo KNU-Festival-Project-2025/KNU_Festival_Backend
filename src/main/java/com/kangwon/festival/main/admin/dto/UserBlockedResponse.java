@@ -9,10 +9,10 @@ import java.time.LocalDateTime;
 @Getter
 @AllArgsConstructor
 public class UserBlockedResponse {
-    private int userBlockId;
-    private int blockerId;
+    private Long userBlockId;
+    private Long blockerId;
     private String blockerNickname;
-    private int blockedUserId;
+    private Long blockedUserId;
     private String blockedUserNickname;
 
     private boolean blockedUserBanned;

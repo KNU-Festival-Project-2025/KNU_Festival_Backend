@@ -6,6 +6,6 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.List;
 
-public interface AdminUserReportRepository extends JpaRepository<UserReport, Integer> {
+public interface AdminUserReportRepository extends JpaRepository<UserReport, Long> {
     List<UserReport> findByReportedUser(UserInfo reportedUser);
 }

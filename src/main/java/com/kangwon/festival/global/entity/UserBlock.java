@@ -16,7 +16,7 @@ public class UserBlock extends BaseTime {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer userBlockId;
+    private Long userBlockId;
 
     @ManyToOne
     @JoinColumn(name = "blocker_id", nullable = false)

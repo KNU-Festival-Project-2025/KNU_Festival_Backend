@@ -15,7 +15,7 @@ public class UserInfo extends BaseTime {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer userId;
+    private Long userId;
 
     @Column(nullable = false, unique = true, length = 16)
     private String userNickname;

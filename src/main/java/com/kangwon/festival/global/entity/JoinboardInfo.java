@@ -16,7 +16,7 @@ public class JoinboardInfo extends BaseTime {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer joinboardId;
+    private Long joinboardId;
 
     @ManyToOne
     @JoinColumn(name = "joinboard_user_id", nullable = false)

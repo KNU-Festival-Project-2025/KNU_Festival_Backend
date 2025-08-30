@@ -32,7 +32,7 @@ public class AdminUserService {
     }
 
     @MethodDescription(description = "특정 유저의 신고내역을 조회합니다.")
-    public List<UserReportResponse> getReportsByUser(int reportedUserId) {
+    public List<UserReportResponse> getReportsByUser(Long reportedUserId) {
         UserInfo reportedUser = userInfoRepository.findById(reportedUserId)
                 .orElseThrow(() -> new ServiceException(CAN_NOT_FIND_USER));
 
@@ -51,7 +51,7 @@ public class AdminUserService {
     }
 
     @MethodDescription(description = "특정 유저의 차단내역을 조회합니다.")
-    public List<UserBlockedResponse> getBlocksByBlockedUser(int blockedUserId) {
+    public List<UserBlockedResponse> getBlocksByBlockedUser(Long blockedUserId) {
         UserInfo blockedUser = userInfoRepository.findById(blockedUserId)
                 .orElseThrow(() -> new ServiceException(CAN_NOT_FIND_BLOCKED_USER));
         return userBlockRepository.findByBlocked(blockedUser)
@@ -66,14 +66,14 @@ public class AdminUserService {
     }
 
     @MethodDescription(description = "특정 유저를 조회합니다.")
-    public UserInfo getUser(int userId) {
+    public UserInfo getUser(Long userId) {
         return userInfoRepository.findById(userId)
                 .orElseThrow(() -> new ServiceException(CAN_NOT_FIND_USER));
     }
 
     @Transactional
     @MethodDescription(description = "유저 이용을 차단합니다.")
-    public void banUser(int userId) {
+    public void banUser(Long userId) {
         UserInfo user = userInfoRepository.findById(userId)
                 .orElseThrow(() -> new ServiceException(CAN_NOT_FIND_USER));
 

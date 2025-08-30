@@ -6,7 +6,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.List;
 
-public interface AdminUserBlockRepository extends JpaRepository<UserBlock, Integer> {
+public interface AdminUserBlockRepository extends JpaRepository<UserBlock, Long> {
     List<UserBlock> findByBlocker(UserInfo blocker);
     List<UserBlock> findByBlocked(UserInfo blocked);
 }

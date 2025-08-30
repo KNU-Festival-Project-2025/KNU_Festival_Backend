@@ -6,8 +6,8 @@ import lombok.*;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-@Builder
 public class GuestbookRequest {
+    private Long userId;
     private String title;
     private String content;
     private boolean anonymous;

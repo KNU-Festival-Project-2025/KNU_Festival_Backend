@@ -15,7 +15,7 @@ import static com.kangwon.festival.global.exception.Code.INVALID_INPUT;
 public class GuestbookInfo extends BaseTime {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer guestbookId;
+    private Long guestbookId;
 
     @ManyToOne
     @JoinColumn(name = "guestbook_user_id")
@@ -32,5 +32,43 @@ public class GuestbookInfo extends BaseTime {
 
     @Column(nullable = false)
     private boolean guestbookIsDeleted = false;
+
+    private GuestbookInfo(UserInfo user, boolean guestbookIsAnonymous, String guestbookTitle, String guestbookContent) {
+        this.user = user;
+        this.guestbookIsAnonymous = guestbookIsAnonymous;
+        this.guestbookTitle = guestbookTitle;
+        this.guestbookContent = guestbookContent;
+    }
+
+    public static GuestbookInfo create(UserInfo user, boolean guestbookIsAnonymous, String title, String content) {
+        if (title == null || title.isBlank()) {
+            throw new ServiceException(INVALID_INPUT, "제목을 입력하세요.");
+        }
+        if (content == null || content.isBlank()) {
+            throw new ServiceException(INVALID_INPUT, "내용을 입력하세요.");
+        }
+
+        return new GuestbookInfo(user, guestbookIsAnonymous, title, content);
+    }
+
+    public void changeTitle(String title) {
+        if (title == null || title.isBlank())
+            return;
+        this.guestbookTitle = title;
+    }
+
+    public void changeContent(String content) {
+        if (content == null || content.isBlank())
+            return;
+        this.guestbookContent = content;
+    }
+
+    public void changeAnonymous(boolean anonymous) {
+        this.guestbookIsAnonymous = anonymous;
+    }
+
+    public void deleted() {
+        this.guestbookIsDeleted = true;
+    }
 
 }

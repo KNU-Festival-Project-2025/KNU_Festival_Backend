@@ -11,9 +11,9 @@ import java.time.LocalDateTime;
 @Setter
 @AllArgsConstructor
 public class GuestbookResponse {
-    private Integer guestbookId;
+    private Long guestbookId;
     private String writerNickname;
-    private Integer userId;
+    private Long userId;
     private boolean guestbookIsAnonymous;
     private String guestbookTitle;
     private String guestbookContent;

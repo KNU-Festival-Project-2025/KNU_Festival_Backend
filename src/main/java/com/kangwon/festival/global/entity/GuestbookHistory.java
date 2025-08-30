@@ -30,4 +30,14 @@ public class GuestbookHistory extends BaseTime{
     @Column(nullable = false, columnDefinition = "TEXT")
     private String guestbookHistoryContent;
 
+    private GuestbookHistory(GuestbookInfo guestbook, String title, String content) {
+        this.guestbook = guestbook;
+        this.guestbookHistoryTitle = title;
+        this.guestbookHistoryContent = content;
+    }
+
+    public static GuestbookHistory of(GuestbookInfo guestbook, String title, String content) {
+        return new GuestbookHistory(guestbook, title, content);
+    }
+
 }

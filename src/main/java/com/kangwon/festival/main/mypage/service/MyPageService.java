@@ -1,6 +1,7 @@
 package com.kangwon.festival.main.mypage.service;
 
 
+import com.kangwon.festival.global.annotation.MethodDescription;
 import com.kangwon.festival.global.entity.UserInfo;
 import com.kangwon.festival.global.exception.ServiceException;
 import com.kangwon.festival.main.mypage.dto.GuestbookResponse;
@@ -26,6 +27,7 @@ public class MyPageService {
     private final MypageGuestbookRepository guestbookRepository;
     private final MypageUserBlockRepository userBlockRepository;
 
+    @MethodDescription(description = "닉네임을 변경합니다.")
     public void updateNickname(int userId, String newNickname){
         UserInfo user = userInfoRepository.findById(userId)
                 .orElseThrow(() -> new NoSuchElementException("사용자를 찾을 수 없습니다."));
@@ -43,7 +45,7 @@ public class MyPageService {
         user.changeNickname(newNickname);
     }
 
-    // 회원 탈퇴
+    @MethodDescription(description = "회원 탈퇴 처리합니다.")
     @Transactional
     public void deleteUser(int userId) {
         UserInfo user = userInfoRepository.findById(userId)
@@ -58,7 +60,7 @@ public class MyPageService {
         user.delete();
     }
 
-    // 내 방명록 조회
+    @MethodDescription(description = "내 방명록을 조회합니다.")
     public List<GuestbookResponse> getMyGuestbook(int userId) {
         UserInfo user = userInfoRepository.findById(userId)
                 .orElseThrow(() -> new ServiceException(CAN_NOT_FIND_USER));
@@ -68,7 +70,7 @@ public class MyPageService {
                 .toList();
     }
 
-    // 차단 목록 조회
+    @MethodDescription(description = "내가 차단한 사용자 목록을 조회합니다.")
     public List<UserBlockResponse> getBlockedUsers(int userId) {
         UserInfo user = userInfoRepository.findById(userId)
                 .orElseThrow(() -> new ServiceException(CAN_NOT_FIND_USER));
@@ -78,7 +80,7 @@ public class MyPageService {
                 .toList();
     }
 
-    // 차단 해제
+    @MethodDescription(description = "특정 사용자의 차단을 해제합니다.")
     @Transactional
     public void unblockUser(int blockerId, int blockedId) {
         UserInfo blocker = userInfoRepository.findById(blockerId)

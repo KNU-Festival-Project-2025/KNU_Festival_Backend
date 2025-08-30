@@ -81,7 +81,7 @@ public class AdminUserService {
             throw new ServiceException(USER_ALREADY_BANNED);
         }
 
-        user.ban(); // 수정 필요
+        user.ban();
     }
 
 }

@@ -6,7 +6,7 @@ import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
-import static com.kangwon.festival.global.exception.Code.INVALID_INPUT;
+import static com.kangwon.festival.global.exception.Code.MISSING_REQUIRED_INPUT;
 
 @Entity
 @Getter
@@ -42,10 +42,10 @@ public class GuestbookInfo extends BaseTime {
 
     public static GuestbookInfo create(UserInfo user, boolean guestbookIsAnonymous, String title, String content) {
         if (title == null || title.isBlank()) {
-            throw new ServiceException(INVALID_INPUT, "제목을 입력하세요.");
+            throw new ServiceException(MISSING_REQUIRED_INPUT, "제목을 입력하세요.");
         }
         if (content == null || content.isBlank()) {
-            throw new ServiceException(INVALID_INPUT, "내용을 입력하세요.");
+            throw new ServiceException(MISSING_REQUIRED_INPUT, "내용을 입력하세요.");
         }
 
         return new GuestbookInfo(user, guestbookIsAnonymous, title, content);

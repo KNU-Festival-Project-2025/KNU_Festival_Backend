@@ -55,7 +55,8 @@ public class GuestbookController {
     public ResponseEntity<?> delete(@RequestParam("userId") Long userId,
                                        @PathVariable Long guestbookId) {
         guestbookService.deleteMyGuestbook(userId, guestbookId);
-        return ResponseEntity.ok("방명록이 삭제되었습니다.");
+        return ResponseEntity.noContent().build();
+//        return ResponseEntity.ok("방명록이 삭제되었습니다.");
     }
 
 }

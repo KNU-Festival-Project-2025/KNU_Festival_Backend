@@ -44,6 +44,12 @@ public class GlobalExceptionHandler {
         return processCustomErrorResponse(e.getErrorCode(), message);
     }
 
+    @MethodDescription(description = "ServiceException(서비스 계층 예외) 처리 메서드")
+    @ExceptionHandler(ServiceException.class)
+    public ResponseEntity<ApiResponseError> handlerServiceException(ServiceException e) {
+        return processCustomErrorResponse(e.getErrorCode(), e.getMessage());
+    }
+
     @MethodDescription(description = "공통 예외 처리 메서드(코드)")
     private ResponseEntity<ApiResponseError> processCustomErrorResponse(Code code) {
         ApiResponseError response = ApiResponseError.of(code);

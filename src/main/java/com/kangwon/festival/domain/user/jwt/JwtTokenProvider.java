@@ -1,21 +1,21 @@
 package com.kangwon.festival.domain.user.jwt;
 
-import static io.jsonwebtoken.security.Keys.hmacShaKeyFor;
-import static java.util.Base64.getEncoder;
-
 import com.kangwon.festival.domain.user.exception.ExpiredTokenException;
 import com.kangwon.festival.domain.user.exception.InValidTokenException;
 import com.kangwon.festival.global.annotation.MethodDescription;
-import com.kangwon.festival.global.config.ValueConfig;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.MalformedJwtException;
+import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.UnsupportedJwtException;
+import io.jsonwebtoken.io.Decoders;
+import io.jsonwebtoken.security.Keys;
 import java.util.Date;
 import javax.crypto.SecretKey;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Component;
 
@@ -23,7 +23,8 @@ import org.springframework.stereotype.Component;
 @Component
 @RequiredArgsConstructor
 public class JwtTokenProvider {
-    private final ValueConfig valueConfig;
+    @Value("${jwt.secret}")
+    private String secretKey;
 
     @MethodDescription(description = "인증 정보를 기반으로 JWT 토큰을 생성합니다.")
     public String generateToken(Authentication authentication, long expiration) {
@@ -31,7 +32,7 @@ public class JwtTokenProvider {
                 .setClaims(generateClaims(authentication))
                 .setIssuedAt(new Date(System.currentTimeMillis()))
                 .setExpiration(new Date(System.currentTimeMillis() + expiration))
-                .signWith(getSigningKey())
+                .signWith(getSigningKey(), SignatureAlgorithm.HS256)
                 .compact();
     }
 
@@ -44,8 +45,8 @@ public class JwtTokenProvider {
 
     @MethodDescription(description = "JWT 서명에 사용할 SecretKey를 반환합니다.")
     private SecretKey getSigningKey() {
-        String encodedKey = getEncoder().encodeToString(valueConfig.getSecretKey().getBytes());
-        return hmacShaKeyFor(encodedKey.getBytes());
+        byte[] keyBytes = Decoders.BASE64.decode(secretKey);
+        return Keys.hmacShaKeyFor(keyBytes);
     }
 
     @MethodDescription(description = "JWT 토큰의 유효성을 검증합니다.")

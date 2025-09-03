@@ -33,7 +33,7 @@ public class SecurityConfig {
                 .exceptionHandling(exceptionHandling -> exceptionHandling.authenticationEntryPoint(customJwtAuthenticationEntryPoint))
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()
-                        .requestMatchers("/api/auth/login").permitAll()
+                        .requestMatchers("/login").permitAll()
                         .requestMatchers("/api/auth/login", "/api/auth/reissue").permitAll()
                         .requestMatchers("/oauth/kakao/**").permitAll()
                         .requestMatchers("/error").permitAll()

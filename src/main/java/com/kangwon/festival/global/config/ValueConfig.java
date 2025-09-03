@@ -11,7 +11,7 @@ import org.springframework.context.annotation.Configuration;
 @Getter
 public class ValueConfig {
 
-    @Value("${jwt.secret")
+    @Value("${jwt.secret}")
     private String secretKey;
 
     @PostConstruct

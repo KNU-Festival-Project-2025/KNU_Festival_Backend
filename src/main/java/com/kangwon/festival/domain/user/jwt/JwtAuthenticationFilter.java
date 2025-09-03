@@ -3,8 +3,6 @@ package com.kangwon.festival.domain.user.jwt;
 import static org.springframework.http.HttpHeaders.AUTHORIZATION;
 import static org.springframework.util.StringUtils.hasText;
 
-import com.kangwon.festival.domain.user.exception.ExpiredTokenException;
-import com.kangwon.festival.domain.user.exception.InValidTokenException;
 import com.kangwon.festival.global.exception.InvalidInputException;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;

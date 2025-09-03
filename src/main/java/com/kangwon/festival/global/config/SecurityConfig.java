@@ -5,6 +5,8 @@ import com.kangwon.festival.domain.user.jwt.JwtAuthenticationFilter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
+import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
@@ -24,18 +26,21 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         return http
+                .cors(Customizer.withDefaults())
                 .csrf(AbstractHttpConfigurer::disable)
                 .formLogin(AbstractHttpConfigurer::disable)
-                .sessionManagement(sessionManagement ->
-                        sessionManagement.sessionCreationPolicy(SessionCreationPolicy.STATELESS)
+                .sessionManagement(sessionManagement -> sessionManagement.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+                .exceptionHandling(exceptionHandling -> exceptionHandling.authenticationEntryPoint(customJwtAuthenticationEntryPoint))
+                .authorizeHttpRequests(auth -> auth
+                        .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()
+                        .requestMatchers("/api/auth/login").permitAll()
+                        .requestMatchers("/api/auth/login", "/api/auth/reissue").permitAll()
+                        .requestMatchers("/oauth/kakao/**").permitAll()
+                        .requestMatchers("/error").permitAll()
+                        // 정적 리소스 허용
+                        .requestMatchers("/favicon.ico", "/static/**", "/css/**", "/js/**", "/images/**").permitAll()
+                        .anyRequest().authenticated()
                 )
-                .exceptionHandling(exceptionHandling ->
-                        exceptionHandling.authenticationEntryPoint(customJwtAuthenticationEntryPoint))
-                .authorizeHttpRequests(authorizeHttpRequests ->
-                        authorizeHttpRequests
-                                .requestMatchers(new AntPathRequestMatcher("/api/v1/auth/**")).permitAll()
-                                .requestMatchers(new AntPathRequestMatcher("/error")).permitAll()
-                                .anyRequest().authenticated())
                 .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class)
                 .build();
     }

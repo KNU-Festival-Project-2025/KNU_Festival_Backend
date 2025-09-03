@@ -5,6 +5,7 @@ import static java.util.Base64.getEncoder;
 
 import com.kangwon.festival.domain.user.exception.ExpiredTokenException;
 import com.kangwon.festival.domain.user.exception.InValidTokenException;
+import com.kangwon.festival.global.annotation.MethodDescription;
 import com.kangwon.festival.global.config.ValueConfig;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.ExpiredJwtException;
@@ -24,6 +25,7 @@ import org.springframework.stereotype.Component;
 public class JwtTokenProvider {
     private final ValueConfig valueConfig;
 
+    @MethodDescription(description = "인증 정보를 기반으로 JWT 토큰을 생성합니다.")
     public String generateToken(Authentication authentication, long expiration) {
         return Jwts.builder()
                 .setClaims(generateClaims(authentication))
@@ -33,17 +35,20 @@ public class JwtTokenProvider {
                 .compact();
     }
 
+    @MethodDescription(description = "Authentication 객체로부터 Claims를 생성합니다.")
     private Claims generateClaims(Authentication authentication) {
         Claims claims = Jwts.claims();
         claims.put("userId", authentication.getPrincipal());
         return claims;
     }
 
+    @MethodDescription(description = "JWT 서명에 사용할 SecretKey를 반환합니다.")
     private SecretKey getSigningKey() {
         String encodedKey = getEncoder().encodeToString(valueConfig.getSecretKey().getBytes());
         return hmacShaKeyFor(encodedKey.getBytes());
     }
 
+    @MethodDescription(description = "JWT 토큰의 유효성을 검증합니다.")
     public void validateToken(String token) {
         try {
             getBody(token); // JWT 파싱
@@ -62,6 +67,7 @@ public class JwtTokenProvider {
         }
     }
 
+    @MethodDescription(description = "JWT 토큰에서 Claims(본문)를 추출합니다.")
     private Claims getBody(final String token) {
         return Jwts.parserBuilder()
                 .setSigningKey(getSigningKey())
@@ -70,6 +76,7 @@ public class JwtTokenProvider {
                 .getBody();
     }
 
+    @MethodDescription(description = "JWT 토큰에서 userId 클레임을 추출합니다.")
     public Long getUserFromJwt(String token) {
         Claims claims = getBody(token);
         return Long.parseLong(claims.get("userId").toString());

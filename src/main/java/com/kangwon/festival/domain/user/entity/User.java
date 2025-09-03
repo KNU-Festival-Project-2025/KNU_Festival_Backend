@@ -23,10 +23,19 @@ public class User extends BaseTime {
     private Integer id;
     private String kakaoId;
     private String nickname;
+    private String refreshToken;
 
     @Builder
     public User(String kakaoId, String nickname) {
         this.kakaoId = kakaoId;
         this.nickname = nickname;
+    }
+
+    public void updateRefreshToken(String refreshToken) {
+        this.refreshToken = refreshToken;
+    }
+
+    public void resetRefreshToken() {
+        this.refreshToken = null;
     }
 }

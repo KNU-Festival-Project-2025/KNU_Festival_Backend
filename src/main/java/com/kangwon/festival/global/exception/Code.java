@@ -28,11 +28,12 @@ public enum Code {
 
     //유효하지 않은 리소스(40100 ~ 40199번대)
     CAN_NOT_FIND_RESOURCE(HttpStatus.BAD_REQUEST, 40100, "해당 리소스를 찾을 수 없습니다."),
-
+    NOT_FOUND_USER(HttpStatus.NOT_FOUND, 40101, "사용자를 찾을 수 없습니다."),
 
     //보안 관련(40200 ~ 40299번대)
     REQUIRED_LOGIN(HttpStatus.UNAUTHORIZED, 40200, "로그인이 필요합니다."),
     INVALID_TOKEN(HttpStatus.UNAUTHORIZED, 40201, "유효하지 않은 토큰입니다."),
+    KAKAO_INVALID_TOKEN(HttpStatus.UNAUTHORIZED, 40211, "카카오 토큰 교환에 실패하였습니다."),
     EXPIRED_TOKEN(HttpStatus.UNAUTHORIZED, 40202, "토큰이 만료되었습니다."),
     ACCESS_DENIED(HttpStatus.FORBIDDEN, 40203, "접근 권한이 없습니다."),
 

@@ -3,15 +3,18 @@ package com.kangwon.festival.domain.user.jwt;
 import static org.springframework.http.HttpHeaders.AUTHORIZATION;
 import static org.springframework.util.StringUtils.hasText;
 
+import com.kangwon.festival.domain.user.entity.Role;
 import com.kangwon.festival.global.exception.InvalidInputException;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.util.List;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import lombok.val;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.web.authentication.WebAuthenticationDetailsSource;
 import org.springframework.stereotype.Component;
@@ -44,7 +47,13 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
                 // validateToken 내부에서 예외가 안 터지면 정상 토큰
                 jwtTokenProvider.validateToken(token);
 
-                val authentication = new UserAuthentication(getUserId(token), null, null);
+                long userId = getUserId(token);
+
+                Role role = getRole(token);
+                List<SimpleGrantedAuthority> authorities =
+                        List.of(new SimpleGrantedAuthority(role.name()));
+
+                val authentication = new UserAuthentication(userId, null, authorities);
                 authentication.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
                 SecurityContextHolder.getContext().setAuthentication(authentication);
             }
@@ -70,4 +79,5 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
     private long getUserId(String token) {
         return jwtTokenProvider.getUserFromJwt(token);
     }
+    private Role getRole(String token) { return jwtTokenProvider.getRoleFromJwt(token);}
 }

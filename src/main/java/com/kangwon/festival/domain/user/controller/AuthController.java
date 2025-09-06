@@ -3,9 +3,9 @@ package com.kangwon.festival.domain.user.controller;
 import com.kangwon.festival.domain.user.dto.response.SignInResponse;
 import com.kangwon.festival.domain.user.service.AuthService;
 import com.kangwon.festival.domain.user.service.KakaoOAuthClient;
+import com.kangwon.festival.global.annotation.UserOnly;
 import com.kangwon.festival.global.dto.ApiResponseData;
 import com.kangwon.festival.global.dto.ApiResponseMessage;
-import java.security.Principal;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
@@ -35,6 +35,7 @@ public class AuthController {
                 .body(ApiResponseData.of(response, "정상적으로 로그인되었습니다."));
     }
 
+    @UserOnly
     @PostMapping("/logout")
     public ResponseEntity<ApiResponseMessage> signOut(Authentication authentication) {
         Long userId = (Long) authentication.getPrincipal();
@@ -42,6 +43,7 @@ public class AuthController {
         return ResponseEntity.ok(ApiResponseMessage.of("로그아웃에 성공하였습니다."));
     }
 
+    @UserOnly
     @DeleteMapping
     public ResponseEntity<ApiResponseMessage> withdraw(Authentication authentication) {
         Long userId = (Long) authentication.getPrincipal();

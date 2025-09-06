@@ -1,5 +1,6 @@
 package com.kangwon.festival.domain.user.jwt;
 
+import com.kangwon.festival.domain.user.entity.Role;
 import com.kangwon.festival.domain.user.exception.ExpiredTokenException;
 import com.kangwon.festival.domain.user.exception.InValidTokenException;
 import com.kangwon.festival.global.annotation.MethodDescription;
@@ -40,6 +41,14 @@ public class JwtTokenProvider {
     private Claims generateClaims(Authentication authentication) {
         Claims claims = Jwts.claims();
         claims.put("userId", authentication.getPrincipal());
+
+        String role = authentication.getAuthorities()
+                .stream()
+                .findFirst()
+                .map(auth -> auth.getAuthority())
+                .orElse(Role.USER.name());
+
+        claims.put("role", Role.valueOf(role).name());
         return claims;
     }
 
@@ -81,5 +90,12 @@ public class JwtTokenProvider {
     public Long getUserFromJwt(String token) {
         Claims claims = getBody(token);
         return Long.parseLong(claims.get("userId").toString());
+    }
+
+    @MethodDescription(description = "JWT 토큰에서 role 클레임을 추출합니다.")
+    public Role getRoleFromJwt(String token) {
+        Claims claims = getBody(token);
+        String roleStr = claims.get("role", String.class);
+        return Role.valueOf(roleStr);
     }
 }

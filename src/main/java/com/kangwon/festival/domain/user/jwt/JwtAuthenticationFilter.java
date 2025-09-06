@@ -4,7 +4,7 @@ import static org.springframework.http.HttpHeaders.AUTHORIZATION;
 import static org.springframework.util.StringUtils.hasText;
 
 import com.kangwon.festival.domain.user.entity.Role;
-import com.kangwon.festival.global.exception.InvalidInputException;
+import com.kangwon.festival.domain.user.exception.CustomJwtAuthenticationEntryPoint;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -14,6 +14,7 @@ import java.util.List;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import lombok.val;
+import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.web.authentication.WebAuthenticationDetailsSource;
@@ -27,6 +28,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
     private static final String BEARER_HEADER = "Bearer ";
     private static final String BLANK = "";
     private final JwtTokenProvider jwtTokenProvider;
+    private final CustomJwtAuthenticationEntryPoint authenticationEntryPoint;
 
 
     /**
@@ -57,10 +59,22 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
                 authentication.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
                 SecurityContextHolder.getContext().setAuthentication(authentication);
             }
-        } catch (Exception exception) {
-            throw new InvalidInputException();
+            filterChain.doFilter(request, response);
+        } catch (AuthenticationException e) {
+            SecurityContextHolder.clearContext();
+            authenticationEntryPoint.commence(request, response, e);
+            return;
+
+        } catch (io.jsonwebtoken.JwtException e) {
+            SecurityContextHolder.clearContext();
+            authenticationEntryPoint.commence(request, response, new AuthenticationException("유효하지 않은 토큰입니다.", e) {});
+            return;
+
+        } catch (Exception e) {
+            SecurityContextHolder.clearContext();
+            authenticationEntryPoint.commence(request, response, new AuthenticationException("인증 처리 중 오류가 발생했습니다.", e) {});
+            return;
         }
-        filterChain.doFilter(request, response);
     }
 
     private String getAccessTokenFromRequest(HttpServletRequest request) {

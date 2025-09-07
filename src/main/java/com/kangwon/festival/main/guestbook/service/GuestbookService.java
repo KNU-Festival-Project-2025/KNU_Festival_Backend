@@ -35,11 +35,16 @@ public class GuestbookService {
         GuestbookInfo saved = guestbookRepository.save(
                 GuestbookInfo.create(
                         writer,
-                        req.isAnonymous(),
                         req.getTitle(),
                         req.getContent()
                 )
         );
+
+        // 히스토리 저장
+        guestbookHistoryRepository.save(
+                GuestbookHistory.of(saved, writer, saved.getGuestbookTitle(), saved.getGuestbookContent())
+        );
+
         return GuestbookResponse.from(saved);
     }
 
@@ -80,15 +85,19 @@ public class GuestbookService {
             throw new ServiceException(ACCESS_DENIED, "본인이 작성한 방명록만 수정할 수 있습니다.");
         }
 
-        // 변경 전 이력을 history에 저장(+ DB 변경하면 유저id, 익명 여부 추가하기)
-        guestbookHistoryRepository.save(
-                GuestbookHistory.of(g, g.getGuestbookTitle(), g.getGuestbookContent())
-        );
+        boolean changed = !safeEquals(g.getGuestbookTitle(), req.getTitle()) || !safeEquals(g.getGuestbookContent(), req.getContent());
+        if (!changed) {
+            return GuestbookResponse.from(g);
+        }
 
         // 변경
         g.changeTitle(req.getTitle());
         g.changeContent(req.getContent());
-        // 익명 변경 추가
+
+        // 변경 후 이력을 history에 저장
+        guestbookHistoryRepository.save(
+                GuestbookHistory.of(g, g.getUser(), g.getGuestbookTitle(), g.getGuestbookContent())
+        );
 
         return GuestbookResponse.from(g);
     }
@@ -104,6 +113,12 @@ public class GuestbookService {
         }
 
         g.deleted();
+    }
+
+    // 변경 여부
+    private static boolean safeEquals(String a, String b) {
+        if (a == null) return b == null;
+        return a.equals(b);
     }
 
 

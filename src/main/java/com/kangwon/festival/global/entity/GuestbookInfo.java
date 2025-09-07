@@ -21,8 +21,6 @@ public class GuestbookInfo extends BaseTime {
     @JoinColumn(name = "guestbook_user_id")
     private UserInfo user;
 
-    @Column(nullable = false)
-    private boolean guestbookIsAnonymous = true;
 
     @Column(nullable = false)
     private String guestbookTitle;
@@ -33,14 +31,13 @@ public class GuestbookInfo extends BaseTime {
     @Column(nullable = false)
     private boolean guestbookIsDeleted = false;
 
-    private GuestbookInfo(UserInfo user, boolean guestbookIsAnonymous, String guestbookTitle, String guestbookContent) {
+    private GuestbookInfo(UserInfo user, String guestbookTitle, String guestbookContent) {
         this.user = user;
-        this.guestbookIsAnonymous = guestbookIsAnonymous;
         this.guestbookTitle = guestbookTitle;
         this.guestbookContent = guestbookContent;
     }
 
-    public static GuestbookInfo create(UserInfo user, boolean guestbookIsAnonymous, String title, String content) {
+    public static GuestbookInfo create(UserInfo user, String title, String content) {
         if (title == null || title.isBlank()) {
             throw new ServiceException(MISSING_REQUIRED_INPUT, "제목을 입력하세요.");
         }
@@ -48,7 +45,7 @@ public class GuestbookInfo extends BaseTime {
             throw new ServiceException(MISSING_REQUIRED_INPUT, "내용을 입력하세요.");
         }
 
-        return new GuestbookInfo(user, guestbookIsAnonymous, title, content);
+        return new GuestbookInfo(user, title, content);
     }
 
     public void changeTitle(String title) {
@@ -61,10 +58,6 @@ public class GuestbookInfo extends BaseTime {
         if (content == null || content.isBlank())
             return;
         this.guestbookContent = content;
-    }
-
-    public void changeAnonymous(boolean anonymous) {
-        this.guestbookIsAnonymous = anonymous;
     }
 
     public void deleted() {

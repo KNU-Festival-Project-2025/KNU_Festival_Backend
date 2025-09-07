@@ -24,20 +24,25 @@ public class GuestbookHistory extends BaseTime{
     @JoinColumn(name = "guestbook_id", nullable = false)
     private GuestbookInfo guestbook;
 
+    @ManyToOne
+    @JoinColumn(name = "guestbook_user_id")
+    private UserInfo user;
+
     @Column(nullable = false)
     private String guestbookHistoryTitle;
 
     @Column(nullable = false, columnDefinition = "TEXT")
     private String guestbookHistoryContent;
 
-    private GuestbookHistory(GuestbookInfo guestbook, String title, String content) {
+    private GuestbookHistory(GuestbookInfo guestbook,  UserInfo user, String title, String content) {
         this.guestbook = guestbook;
+        this.user = user;
         this.guestbookHistoryTitle = title;
         this.guestbookHistoryContent = content;
     }
 
-    public static GuestbookHistory of(GuestbookInfo guestbook, String title, String content) {
-        return new GuestbookHistory(guestbook, title, content);
+    public static GuestbookHistory of(GuestbookInfo guestbook,  UserInfo user, String title, String content) {
+        return new GuestbookHistory(guestbook, user, title, content);
     }
 
 }

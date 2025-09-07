@@ -15,7 +15,6 @@ public class GuestbookResponse {
     private String userNickname;
     private String title;
     private String content;
-    private boolean anonymous;
     private boolean deleted;
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
@@ -27,7 +26,6 @@ public class GuestbookResponse {
                 g.getUser().getUserNickname(),
                 g.getGuestbookTitle(),
                 g.getGuestbookContent(),
-                g.isGuestbookIsAnonymous(),
                 g.isGuestbookIsDeleted(),
                 g.getCreatedDateTime(),
                 g.getModifiedDateTime()

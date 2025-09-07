@@ -22,13 +22,15 @@ public class User extends BaseTime {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
     private String kakaoId;
-    private String nickname;
     private String refreshToken;
+    private String profileImgUrl;
+    private String phone;
+    private String username;
 
     @Builder
-    public User(String kakaoId, String nickname) {
+    public User(String kakaoId, String nickname, String profileImgUrl) {
         this.kakaoId = kakaoId;
-        this.nickname = nickname;
+        this.profileImgUrl = profileImgUrl;
     }
 
     public void updateRefreshToken(String refreshToken) {

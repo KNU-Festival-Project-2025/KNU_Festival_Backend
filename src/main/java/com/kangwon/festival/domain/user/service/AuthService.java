@@ -1,5 +1,6 @@
 package com.kangwon.festival.domain.user.service;
 
+import com.kangwon.festival.domain.user.dto.response.KaKaoUserResponse;
 import com.kangwon.festival.domain.user.dto.response.SignInResponse;
 import com.kangwon.festival.domain.user.dto.Token;
 import com.kangwon.festival.domain.user.entity.User;
@@ -68,20 +69,21 @@ public class AuthService {
 
     @MethodDescription(description = "Kakao에서 유저 정보를 조회합니다.")
     private User getUser(String kakaoAccessToken) {
-        String kakaoId = kakaoService.getKakaoData(kakaoAccessToken);
-        return signUp(kakaoId);
+        KaKaoUserResponse kakao = kakaoService.getKakaoData(kakaoAccessToken);
+        return signUp(kakao);
     }
 
     @MethodDescription(description = "KakaoId를 조회합니다. 조회된 Id가 없는 경우 새롭게 가입을 진행합니다.")
-    private User signUp(String kakaoId) {
-        return userRepository.findByKakaoId(kakaoId).
-                orElseGet(() -> saveUser(kakaoId));
+    private User signUp(KaKaoUserResponse kakao) {
+        return userRepository.findByKakaoId(kakao.id()).
+                orElseGet(() -> saveUser(kakao));
     }
 
     @MethodDescription(description = "유저를 저장합니다.")
-    private User saveUser(String kakaoId) {
+    private User saveUser(KaKaoUserResponse kakao) {
         User user = User.builder()
-                .kakaoId(kakaoId)
+                .kakaoId(kakao.id())
+                .profileImgUrl(kakao.profileImgUrl())
                 .build();
         return userRepository.save(user);
     }

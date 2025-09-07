@@ -7,8 +7,4 @@ public class InvalidInputException extends BaseException {
     public InvalidInputException() {
         super(INVALID_INPUT);
     }
-
-    public InvalidInputException(String message) {
-        super(INVALID_INPUT, message);
-    }
 }

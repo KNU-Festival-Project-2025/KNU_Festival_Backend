@@ -28,7 +28,7 @@ public class User extends BaseTime {
     private String username;
 
     @Builder
-    public User(String kakaoId, String nickname, String profileImgUrl) {
+    public User(String kakaoId, String profileImgUrl) {
         this.kakaoId = kakaoId;
         this.profileImgUrl = profileImgUrl;
     }

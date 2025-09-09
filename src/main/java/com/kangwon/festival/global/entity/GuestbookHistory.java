@@ -1,6 +1,7 @@
 package com.kangwon.festival.global.entity;
 
 
+import com.kangwon.festival.domain.user.entity.User;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Getter;
@@ -26,21 +27,18 @@ public class GuestbookHistory extends BaseTime{
 
     @ManyToOne
     @JoinColumn(name = "guestbook_user_id")
-    private UserInfo user;
-
-    @Column(nullable = false)
-    private String guestbookHistoryTitle;
+    private User user;
 
     @Column(nullable = false, columnDefinition = "TEXT")
     private String guestbookHistoryContent;
 
-    private GuestbookHistory(GuestbookInfo guestbook,  UserInfo user, String content) {
+    private GuestbookHistory(GuestbookInfo guestbook,  User user, String content) {
         this.guestbook = guestbook;
         this.user = user;
         this.guestbookHistoryContent = content;
     }
 
-    public static GuestbookHistory of(GuestbookInfo guestbook,  UserInfo user, String content) {
+    public static GuestbookHistory of(GuestbookInfo guestbook,  User user, String content) {
         return new GuestbookHistory(guestbook, user, content);
     }
 

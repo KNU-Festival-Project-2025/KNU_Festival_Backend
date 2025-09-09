@@ -1,5 +1,7 @@
 package com.kangwon.festival.domain.guestbook.service;
 
+import com.kangwon.festival.domain.guestbook.repository.GuestbookUserReopsitory;
+import com.kangwon.festival.domain.user.entity.User;
 import com.kangwon.festival.global.annotation.MethodDescription;
 import com.kangwon.festival.global.entity.GuestbookHistory;
 import com.kangwon.festival.global.entity.GuestbookInfo;
@@ -9,7 +11,6 @@ import com.kangwon.festival.domain.guestbook.dto.GuestbookRequest;
 import com.kangwon.festival.domain.guestbook.dto.GuestbookResponse;
 import com.kangwon.festival.domain.guestbook.repository.GuestbookHistoryRepository;
 import com.kangwon.festival.domain.guestbook.repository.GuestbookRepository;
-import com.kangwon.festival.domain.mypage.repository.MypageUserInfoRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -24,13 +25,14 @@ import static com.kangwon.festival.global.exception.Code.*;
 public class GuestbookService {
     private final GuestbookRepository guestbookRepository;
     private final GuestbookHistoryRepository guestbookHistoryRepository;
-    private final MypageUserInfoRepository userInfoRepository;
+    private final GuestbookUserReopsitory userRepository;
 
     @Transactional
     @MethodDescription(description = "방명록을 등록합니다.")
     public GuestbookResponse create(Long userId, GuestbookRequest req) {
-        UserInfo writer = userInfoRepository.findById(userId)
-                .orElseThrow(() -> new ServiceException(CAN_NOT_FIND_USER));
+        // User.id가 Integer
+        User writer = userRepository.findById(userId)
+                .orElseThrow(() -> new ServiceException(CAN_NOT_FIND_USER, "방명록- 해당 유저를 찾지 못하였습니다."));
 
         GuestbookInfo saved = guestbookRepository.save(
                 GuestbookInfo.create(writer, req.getContent())
@@ -58,7 +60,7 @@ public class GuestbookService {
         GuestbookInfo g = guestbookRepository.findByGuestbookIdAndGuestbookIsDeletedFalse(guestbookId)
                 .orElseThrow(() -> new ServiceException(CAN_NOT_FIND_RESOURCE));
 
-        if (!g.getUser().getUserId().equals(userId)) {
+        if (!g.getUser().getId().equals(userId)) {
             throw new ServiceException(ACCESS_DENIED, "본인이 작성한 방명록만 삭제할 수 있습니다.");
         }
 

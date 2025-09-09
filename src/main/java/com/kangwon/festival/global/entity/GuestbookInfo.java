@@ -1,5 +1,6 @@
 package com.kangwon.festival.global.entity;
 
+import com.kangwon.festival.domain.user.entity.User;
 import com.kangwon.festival.global.exception.ServiceException;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
@@ -19,7 +20,7 @@ public class GuestbookInfo extends BaseTime {
 
     @ManyToOne
     @JoinColumn(name = "guestbook_user_id")
-    private UserInfo user;
+    private User user;
 
     @Column(nullable = false, columnDefinition = "TEXT")
     private String guestbookContent;
@@ -27,12 +28,12 @@ public class GuestbookInfo extends BaseTime {
     @Column(nullable = false)
     private boolean guestbookIsDeleted = false;
 
-    private GuestbookInfo(UserInfo user, String guestbookContent) {
+    private GuestbookInfo(User user, String guestbookContent) {
         this.user = user;
         this.guestbookContent = guestbookContent;
     }
 
-    public static GuestbookInfo create(UserInfo user, String content) {
+    public static GuestbookInfo create(User user, String content) {
         if (content == null || content.isBlank()) {
             throw new ServiceException(MISSING_REQUIRED_INPUT, "내용을 입력하세요.");
         }

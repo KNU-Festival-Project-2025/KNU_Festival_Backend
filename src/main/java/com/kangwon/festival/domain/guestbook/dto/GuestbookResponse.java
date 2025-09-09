@@ -11,7 +11,7 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 public class GuestbookResponse {
     private Long guestbookId;
-    private String userNickname;
+    private String nickname;
     private String content;
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
@@ -19,7 +19,7 @@ public class GuestbookResponse {
     public static GuestbookResponse from(GuestbookInfo g) {
         return new GuestbookResponse(
                 g.getGuestbookId(),
-                g.getUser().getUserNickname(),
+                g.getUser().getNickname(),
                 g.getGuestbookContent(),
                 g.getCreatedDateTime(),
                 g.getModifiedDateTime()

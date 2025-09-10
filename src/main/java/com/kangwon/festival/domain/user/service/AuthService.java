@@ -2,17 +2,24 @@ package com.kangwon.festival.domain.user.service;
 
 import com.kangwon.festival.domain.security.dto.CustomUserDetails;
 import com.kangwon.festival.domain.user.dto.KaKaoUserResponse;
+import com.kangwon.festival.domain.user.dto.SignInRequest;
 import com.kangwon.festival.domain.user.dto.SignInResponse;
 import com.kangwon.festival.domain.security.dto.Token;
+import com.kangwon.festival.domain.user.dto.ValidationGroups;
 import com.kangwon.festival.domain.user.entity.User;
+import com.kangwon.festival.domain.user.exception.DuplicateNicknameException;
 import com.kangwon.festival.domain.user.exception.InValidTokenException;
 import com.kangwon.festival.domain.user.exception.NotFoundUserException;
 import com.kangwon.festival.domain.security.jwt.JwtTokenProvider;
 import com.kangwon.festival.domain.security.jwt.UserAuthentication;
 import com.kangwon.festival.domain.user.respository.UserRepository;
 import com.kangwon.festival.global.annotation.MethodDescription;
+import jakarta.validation.ConstraintViolation;
+import jakarta.validation.ConstraintViolationException;
+import jakarta.validation.Validator;
 import java.util.Objects;
 import java.util.Optional;
+import java.util.Set;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
@@ -28,13 +35,27 @@ public class AuthService {
     private final JwtTokenProvider jwtTokenProvider;
     private final UserRepository userRepository;
     private final KakaoService kakaoService;
+    private final KakaoOAuthClient kakaoOAuthClient;
+    private final Validator validator;
 
-    @MethodDescription(description = "로그인을 진행합니다.")
+    @MethodDescription(description = "로그인/회원가입(신규 시만 닉네임·전화번호 검증 및 저장)")
     @Transactional
-    public SignInResponse signIn(String kakaoAccessToken) {
-        User user = getUser(kakaoAccessToken);
+    public SignInResponse signIn(SignInRequest request) {
+        String kakaoAccessToken = kakaoOAuthClient.exchangeCodeForAccessToken(request.code());
+        KaKaoUserResponse kakao = kakaoService.getKakaoData(kakaoAccessToken);
+        boolean isNew = !userRepository.existsByKakaoId(kakao.id());
+
+        if (isNew) validateForSignUp(request);
+
+        User user = getUser(kakaoAccessToken, request);
         Token token = getToken(user);
         return SignInResponse.of(token);
+    }
+
+    @MethodDescription(description = "신규 가입 검증(그룹)")
+    private void validateForSignUp(SignInRequest req) {
+        Set<ConstraintViolation<SignInRequest>> v = validator.validate(req, ValidationGroups.SignUp.class);
+        if (!v.isEmpty()) throw new ConstraintViolationException(v);
     }
 
     @MethodDescription(description = "로그아웃을 진행합니다.")
@@ -70,21 +91,28 @@ public class AuthService {
     }
 
     @MethodDescription(description = "Kakao에서 유저 정보를 조회합니다.")
-    private User getUser(String kakaoAccessToken) {
+    private User getUser(String kakaoAccessToken, SignInRequest request) {
         KaKaoUserResponse kakao = kakaoService.getKakaoData(kakaoAccessToken);
-        return signUp(kakao);
+        return signUp(kakao, request);
     }
 
     @MethodDescription(description = "KakaoId를 조회합니다. 조회된 Id가 없는 경우 새롭게 가입을 진행합니다.")
-    private User signUp(KaKaoUserResponse kakao) {
-        return userRepository.findByKakaoId(kakao.id()).
-                orElseGet(() -> saveUser(kakao));
+    private User signUp(KaKaoUserResponse kakao, SignInRequest request) {
+        return userRepository.findByKakaoId(kakao.id())
+                .orElseGet(() -> {
+                    if (userRepository.existsByNickname(request.nickname())) {
+                        throw new DuplicateNicknameException();
+                    }
+                    return saveUser(kakao, request);
+                });
     }
 
     @MethodDescription(description = "유저를 저장합니다.")
-    private User saveUser(KaKaoUserResponse kakao) {
+    private User saveUser(KaKaoUserResponse kakao, SignInRequest request) {
         User user = User.builder()
                 .kakaoId(kakao.id())
+                .nickname(request.nickname())
+                .phone(request.phone())
                 .profileImgUrl(kakao.profileImgUrl())
                 .build();
         return userRepository.save(user);

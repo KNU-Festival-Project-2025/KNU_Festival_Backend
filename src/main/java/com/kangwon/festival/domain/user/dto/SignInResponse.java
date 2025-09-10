@@ -11,8 +11,8 @@ public record SignInResponse(
 ) {
     public static SignInResponse of(Token token) {
         return SignInResponse.builder()
-                .accessToken(token.getAccessToken())
-                .refreshToken(token.getRefreshToken())
+                .accessToken(token.accessToken())
+                .refreshToken(token.refreshToken())
                 .build();
     }
 }

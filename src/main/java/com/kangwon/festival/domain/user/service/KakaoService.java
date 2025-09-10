@@ -36,7 +36,6 @@ public class KakaoService {
 
             Map<String, Object> properties = (Map<String, Object>) body.get("properties");
             String profileImgUrl = properties != null ? (String) properties.get("profile_image") : null;
-            String profileImgUrl = properties != null ? (String) properties.get("profile_image") : null;
 
             return KaKaoUserResponse.builder()
                     .id(id)

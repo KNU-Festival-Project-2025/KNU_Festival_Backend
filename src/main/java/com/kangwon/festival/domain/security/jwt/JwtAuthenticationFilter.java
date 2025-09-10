@@ -3,8 +3,12 @@ package com.kangwon.festival.domain.security.jwt;
 import static org.springframework.http.HttpHeaders.AUTHORIZATION;
 import static org.springframework.util.StringUtils.hasText;
 
+import com.kangwon.festival.domain.security.dto.CustomUserDetails;
 import com.kangwon.festival.domain.user.entity.Role;
+import com.kangwon.festival.domain.user.entity.User;
 import com.kangwon.festival.domain.user.exception.CustomJwtAuthenticationEntryPoint;
+import com.kangwon.festival.domain.user.exception.NotFoundUserException;
+import com.kangwon.festival.domain.user.respository.UserRepository;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -14,6 +18,7 @@ import java.util.List;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import lombok.val;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -29,6 +34,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
     private static final String BLANK = "";
     private final JwtTokenProvider jwtTokenProvider;
     private final CustomJwtAuthenticationEntryPoint authenticationEntryPoint;
+    private final UserRepository userRepository;
 
 
     /**
@@ -50,12 +56,15 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
                 jwtTokenProvider.validateToken(token);
 
                 long userId = getUserId(token);
-
                 Role role = getRole(token);
-                List<SimpleGrantedAuthority> authorities =
-                        List.of(new SimpleGrantedAuthority(role.name()));
 
-                val authentication = new UserAuthentication(userId, null, authorities);
+                User user = userRepository.findById(userId)
+                        .orElseThrow(() -> new NotFoundUserException());
+
+                CustomUserDetails principal = new CustomUserDetails(user);
+                List<SimpleGrantedAuthority> authorities = List.of(new SimpleGrantedAuthority(role.name()));
+
+                var authentication = new UsernamePasswordAuthenticationToken(principal, null, authorities);
                 authentication.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
                 SecurityContextHolder.getContext().setAuthentication(authentication);
             }

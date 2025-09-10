@@ -64,7 +64,7 @@ public class AuthService {
 
 
         Token token = generateToken(new UserAuthentication(user.getId(), null, null));
-        user.updateRefreshToken(token.getRefreshToken());
+        user.updateRefreshToken(token.refreshToken());
 
         return SignInResponse.of(token);
     }
@@ -93,7 +93,7 @@ public class AuthService {
     @MethodDescription(description = "토큰을 발급받습니다.")
     private Token getToken(User user) {
         Token token = generateToken(new UserAuthentication(user.getId(), null, null));
-        user.updateRefreshToken(token.getRefreshToken());
+        user.updateRefreshToken(token.refreshToken());
         return token;
     }
 

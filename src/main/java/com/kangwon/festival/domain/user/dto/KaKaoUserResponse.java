@@ -1,4 +1,4 @@
-package com.kangwon.festival.domain.user.dto.response;
+package com.kangwon.festival.domain.user.dto;
 
 import com.kangwon.festival.domain.user.entity.User;
 import lombok.Builder;

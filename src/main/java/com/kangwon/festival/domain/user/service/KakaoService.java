@@ -1,7 +1,7 @@
 package com.kangwon.festival.domain.user.service;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.kangwon.festival.domain.user.dto.response.KaKaoUserResponse;
+import com.kangwon.festival.domain.user.dto.KaKaoUserResponse;
 import com.kangwon.festival.global.annotation.MethodDescription;
 import com.kangwon.festival.global.exception.InternalServerException;
 import org.springframework.http.HttpEntity;
@@ -35,6 +35,7 @@ public class KakaoService {
             String id = body.get("id").toString();
 
             Map<String, Object> properties = (Map<String, Object>) body.get("properties");
+            String profileImgUrl = properties != null ? (String) properties.get("profile_image") : null;
             String profileImgUrl = properties != null ? (String) properties.get("profile_image") : null;
 
             return KaKaoUserResponse.builder()

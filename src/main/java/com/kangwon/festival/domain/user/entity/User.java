@@ -25,12 +25,14 @@ public class User extends BaseTime {
     private String refreshToken;
     private String profileImgUrl;
     private String phone;
-    private String username;
+    private String nickname;
 
     @Builder
-    public User(String kakaoId, String profileImgUrl) {
+    public User(String kakaoId, String profileImgUrl, String phone, String nickname) {
         this.kakaoId = kakaoId;
         this.profileImgUrl = profileImgUrl;
+        this.phone = phone;
+        this.nickname = nickname;
     }
 
     public void updateRefreshToken(String refreshToken) {

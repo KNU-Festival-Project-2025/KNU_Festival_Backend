@@ -1,16 +1,18 @@
 package com.kangwon.festival.domain.user.service;
 
-import com.kangwon.festival.domain.user.dto.response.KaKaoUserResponse;
-import com.kangwon.festival.domain.user.dto.response.SignInResponse;
-import com.kangwon.festival.domain.user.dto.Token;
+import com.kangwon.festival.domain.security.dto.CustomUserDetails;
+import com.kangwon.festival.domain.user.dto.KaKaoUserResponse;
+import com.kangwon.festival.domain.user.dto.SignInResponse;
+import com.kangwon.festival.domain.security.dto.Token;
 import com.kangwon.festival.domain.user.entity.User;
 import com.kangwon.festival.domain.user.exception.InValidTokenException;
 import com.kangwon.festival.domain.user.exception.NotFoundUserException;
-import com.kangwon.festival.domain.user.jwt.JwtTokenProvider;
-import com.kangwon.festival.domain.user.jwt.UserAuthentication;
+import com.kangwon.festival.domain.security.jwt.JwtTokenProvider;
+import com.kangwon.festival.domain.security.jwt.UserAuthentication;
 import com.kangwon.festival.domain.user.respository.UserRepository;
 import com.kangwon.festival.global.annotation.MethodDescription;
 import java.util.Objects;
+import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
@@ -37,15 +39,15 @@ public class AuthService {
 
     @MethodDescription(description = "로그아웃을 진행합니다.")
     @Transactional
-    public void signOut(long userId) {
-        User user = findUser(userId);
+    public void signOut(CustomUserDetails customUserDetails) {
+        User user = findUser(customUserDetails);
         user.resetRefreshToken();
     }
 
     @MethodDescription(description = "회원을 탈퇴합니다.")
     @Transactional
-    public void withdraw(long userId) {
-        User user = findUser(userId);
+    public void withdraw(CustomUserDetails customUserDetails) {
+        User user = findUser(customUserDetails);
         deleteUser(user);
     }
 
@@ -61,7 +63,7 @@ public class AuthService {
         if (!Objects.equals(saved, refreshToken)) throw new InValidTokenException("유효하지 않은 리프레시 토큰입니다.");
 
 
-        Token token = generatetoken(new UserAuthentication(user.getId(), null, null));
+        Token token = generateToken(new UserAuthentication(user.getId(), null, null));
         user.updateRefreshToken(token.getRefreshToken());
 
         return SignInResponse.of(token);
@@ -90,21 +92,28 @@ public class AuthService {
 
     @MethodDescription(description = "토큰을 발급받습니다.")
     private Token getToken(User user) {
-        Token token = generatetoken(new UserAuthentication(user.getId(), null, null));
+        Token token = generateToken(new UserAuthentication(user.getId(), null, null));
         user.updateRefreshToken(token.getRefreshToken());
         return token;
     }
 
     @MethodDescription(description = "토큰을 발급받습니다.")
-    private Token generatetoken(Authentication authentication) {
+    private Token generateToken(Authentication authentication) {
         return Token.builder()
                 .accessToken(jwtTokenProvider.generateToken(authentication, ACCESS_TOKEN_EXPIRATION))
                 .refreshToken(jwtTokenProvider.generateToken(authentication, REFRESH_TOKEN_EXPIRATION))
                 .build();
     }
 
-    @MethodDescription(description = "유저를 조회합니다.")
-    private User findUser(long userId) {
+    @MethodDescription(description = "유저를 조회합니다. (SecurityContext 기반)")
+    private User findUser(CustomUserDetails principal) {
+        return Optional.ofNullable(principal)
+                .map(CustomUserDetails::getUser)
+                .orElseThrow(NotFoundUserException::new);
+    }
+
+    @MethodDescription(description = "유저를 조회합니다. (PK 기반)")
+    private User findUser(Long userId) {
         return userRepository.findById(userId)
                 .orElseThrow(NotFoundUserException::new);
     }

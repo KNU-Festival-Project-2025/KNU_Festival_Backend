@@ -1,4 +1,4 @@
-package com.kangwon.festival.domain.user.dto;
+package com.kangwon.festival.domain.security.dto;
 
 import org.hibernate.validator.constraints.Length;
 import jakarta.validation.constraints.NotNull;

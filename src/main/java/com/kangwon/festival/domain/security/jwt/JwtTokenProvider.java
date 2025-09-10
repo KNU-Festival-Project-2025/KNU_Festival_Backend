@@ -1,4 +1,4 @@
-package com.kangwon.festival.domain.user.jwt;
+package com.kangwon.festival.domain.security.jwt;
 
 import com.kangwon.festival.domain.user.entity.Role;
 import com.kangwon.festival.domain.user.exception.ExpiredTokenException;

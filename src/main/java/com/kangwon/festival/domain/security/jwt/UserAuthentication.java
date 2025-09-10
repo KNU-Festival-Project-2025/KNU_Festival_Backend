@@ -1,4 +1,4 @@
-package com.kangwon.festival.domain.user.jwt;
+package com.kangwon.festival.domain.security.jwt;
 
 import java.util.Collection;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;

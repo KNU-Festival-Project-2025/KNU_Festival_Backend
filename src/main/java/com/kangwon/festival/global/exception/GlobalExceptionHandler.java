@@ -44,6 +44,12 @@ public class GlobalExceptionHandler {
         return processCustomErrorResponse(e.getErrorCode(), message);
     }
 
+    @MethodDescription(description = "ServiceException(서비스 계층 예외) 처리 메서드")
+    @ExceptionHandler(ServiceException.class)
+    public ResponseEntity<ApiResponseError> handlerServiceException(ServiceException e) {
+        return processCustomErrorResponse(e.getErrorCode(), e.getMessage());
+    }
+
     @MethodDescription(description = "공통 예외 처리 메서드(코드)")
     private ResponseEntity<ApiResponseError> processCustomErrorResponse(Code code) {
         ApiResponseError response = ApiResponseError.of(code);
@@ -55,5 +61,20 @@ public class GlobalExceptionHandler {
         ApiResponseError response = ApiResponseError.of(code, message);
         return ResponseEntity.status(code.getStatus()).body(response);
     }
+
+    @MethodDescription(description = "프로그램적 검증 및 @Validated 파라미터의 제약 위반 처리")
+    @ExceptionHandler(jakarta.validation.ConstraintViolationException.class)
+    public ResponseEntity<ApiResponseError> handleConstraintViolation(jakarta.validation.ConstraintViolationException e) {
+        log.warn("[ConstraintViolationException] {}: {}", e.getClass().getName(), e.getMessage());
+
+        String message = e.getConstraintViolations().stream()
+                .map(v -> v.getMessage())
+                .distinct()
+                .collect(java.util.stream.Collectors.joining(", "));
+
+        ApiResponseError response = ApiResponseError.of(Code.VALIDATION_ERROR, message);
+        return ResponseEntity.status(Code.VALIDATION_ERROR.getStatus()).body(response);
+    }
+
 }
 

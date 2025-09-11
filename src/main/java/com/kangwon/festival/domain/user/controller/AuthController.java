@@ -1,16 +1,21 @@
 package com.kangwon.festival.domain.user.controller;
 
-import com.kangwon.festival.domain.user.dto.response.SignInResponse;
+import com.kangwon.festival.domain.security.dto.CustomUserDetails;
+import com.kangwon.festival.domain.user.dto.SignInRequest;
+import com.kangwon.festival.domain.user.dto.SignInResponse;
 import com.kangwon.festival.domain.user.service.AuthService;
 import com.kangwon.festival.domain.user.service.KakaoOAuthClient;
+import com.kangwon.festival.global.annotation.CurrentUser;
 import com.kangwon.festival.global.annotation.UserOnly;
 import com.kangwon.festival.global.dto.ApiResponseData;
 import com.kangwon.festival.global.dto.ApiResponseMessage;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -24,9 +29,8 @@ public class AuthController {
     private final KakaoOAuthClient kakaoOAuthClient;
 
     @PostMapping("/login")
-    public ResponseEntity<ApiResponseData> exchange(@RequestParam("code") String code) {
-        String kakaoAccessToken = kakaoOAuthClient.exchangeCodeForAccessToken(code);
-        SignInResponse response = authService.signIn(kakaoAccessToken);
+    public ResponseEntity<ApiResponseData> exchange(@Valid @RequestBody SignInRequest request) {
+        SignInResponse response = authService.signIn(request);
 
         return ResponseEntity.ok()
                 .header("X-Access-Token",  response.accessToken())
@@ -37,17 +41,15 @@ public class AuthController {
 
     @UserOnly
     @PostMapping("/logout")
-    public ResponseEntity<ApiResponseMessage> signOut(Authentication authentication) {
-        Long userId = (Long) authentication.getPrincipal();
-        authService.signOut(userId);
+    public ResponseEntity<ApiResponseMessage> signOut(@CurrentUser CustomUserDetails user) {
+        authService.signOut(user);
         return ResponseEntity.ok(ApiResponseMessage.of("로그아웃에 성공하였습니다."));
     }
 
     @UserOnly
     @DeleteMapping
-    public ResponseEntity<ApiResponseMessage> withdraw(Authentication authentication) {
-        Long userId = (Long) authentication.getPrincipal();
-        authService.withdraw(userId);
+    public ResponseEntity<ApiResponseMessage> withdraw(@CurrentUser CustomUserDetails user) {
+        authService.withdraw(user);
         return ResponseEntity.ok(ApiResponseMessage.of("회원이 탈퇴되었습니다."));
     }
 

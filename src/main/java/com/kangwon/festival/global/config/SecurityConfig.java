@@ -2,7 +2,7 @@ package com.kangwon.festival.global.config;
 
 import com.kangwon.festival.domain.user.exception.CustomAccessDeniedHandler;
 import com.kangwon.festival.domain.user.exception.CustomJwtAuthenticationEntryPoint;
-import com.kangwon.festival.domain.user.jwt.JwtAuthenticationFilter;
+import com.kangwon.festival.domain.security.jwt.JwtAuthenticationFilter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

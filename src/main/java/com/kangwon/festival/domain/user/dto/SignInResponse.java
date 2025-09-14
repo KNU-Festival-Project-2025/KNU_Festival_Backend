@@ -1,6 +1,6 @@
-package com.kangwon.festival.domain.user.dto.response;
+package com.kangwon.festival.domain.user.dto;
 
-import com.kangwon.festival.domain.user.dto.Token;
+import com.kangwon.festival.domain.security.dto.Token;
 import lombok.Builder;
 import lombok.NonNull;
 
@@ -11,8 +11,8 @@ public record SignInResponse(
 ) {
     public static SignInResponse of(Token token) {
         return SignInResponse.builder()
-                .accessToken(token.getAccessToken())
-                .refreshToken(token.getRefreshToken())
+                .accessToken(token.accessToken())
+                .refreshToken(token.refreshToken())
                 .build();
     }
 }

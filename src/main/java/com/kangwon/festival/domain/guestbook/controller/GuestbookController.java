@@ -52,36 +52,4 @@ public class GuestbookController {
         return ResponseEntity.ok(ApiResponseMessage.of("방명록이 삭제되었습니다."));
     }
 
-
-    /*
-    // 특정 방명록 조회
-    @GetMapping("/{guestbookId}")
-    public ResponseEntity<ApiResponseData<GuestbookResponse>> getById(@PathVariable Long guestbookId) {
-        GuestbookResponse body = guestbookService.getById(guestbookId);
-        return ResponseEntity.ok(ApiResponseData.of(body, "방명록을 조회했습니다."));
-    }
-
-
-    //내 방명록 조회
-    @GetMapping("/mine")
-    public ResponseEntity<ApiResponseData<List<GuestbookResponse>>> getMine(Authentication authentication) {
-        Long userId = (Long) authentication.getPrincipal();
-        List<GuestbookResponse> list = guestbookService.getMyGuestbooks(userId);
-        return ResponseEntity.ok(ApiResponseData.of(list, "내 방명록을 조회했습니다."));
-    }
-
-
-    // 내가 쓴 방명록 수정
-    @PatchMapping("/{guestbookId}")
-    public ResponseEntity<ApiResponseData<GuestbookResponse>> update(Authentication authentication,
-                                                    @PathVariable Long guestbookId,
-                                                    @RequestBody GuestbookRequest req) {
-        Long userId = (Long) authentication.getPrincipal();
-        GuestbookResponse body = guestbookService.updateMyGuestbook(userId, guestbookId, req);
-        return ResponseEntity.ok(ApiResponseData.of(body, "방명록이 수정되었습니다."));
-    }
-*/
-
-
-
 }

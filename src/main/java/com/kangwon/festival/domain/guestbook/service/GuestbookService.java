@@ -29,7 +29,7 @@ public class GuestbookService {
 
     @Transactional
     @MethodDescription(description = "방명록을 등록합니다.")
-    public GuestbookResponse create(Long userId, GuestbookRequest req) {
+    public GuestbookResponse create(Integer userId, GuestbookRequest req) {
         // User.id가 Integer
         User writer = userRepository.findById(userId)
                 .orElseThrow(() -> new ServiceException(CAN_NOT_FIND_USER, "방명록- 해당 유저를 찾지 못하였습니다."));
@@ -56,7 +56,7 @@ public class GuestbookService {
 
     @Transactional
     @MethodDescription(description = "내가 쓴 방명록을 삭제합니다.")
-    public void deleteMyGuestbook(Long userId, Long guestbookId) {
+    public void deleteMyGuestbook(Integer userId, Long guestbookId) {
         GuestbookInfo g = guestbookRepository.findByGuestbookIdAndGuestbookIsDeletedFalse(guestbookId)
                 .orElseThrow(() -> new ServiceException(CAN_NOT_FIND_RESOURCE));
 

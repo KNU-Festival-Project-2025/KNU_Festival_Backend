@@ -3,6 +3,8 @@ package com.kangwon.festival.domain.guestbook.controller;
 import com.kangwon.festival.domain.guestbook.dto.GuestbookRequest;
 import com.kangwon.festival.domain.guestbook.dto.GuestbookResponse;
 import com.kangwon.festival.domain.guestbook.service.GuestbookService;
+import com.kangwon.festival.domain.security.dto.CustomUserDetails;
+import com.kangwon.festival.global.annotation.CurrentUser;
 import com.kangwon.festival.global.annotation.UserOnly;
 import com.kangwon.festival.global.dto.ApiResponseData;
 import com.kangwon.festival.global.dto.ApiResponseMessage;
@@ -24,8 +26,8 @@ public class GuestbookController {
     // 방명록 등록
     @UserOnly
     @PostMapping("/register")
-    public ResponseEntity<ApiResponseData<GuestbookResponse>> create(Authentication authentication, @RequestBody GuestbookRequest req) {
-        Long userId = (Long) authentication.getPrincipal();
+    public ResponseEntity<ApiResponseData<GuestbookResponse>> create(@CurrentUser CustomUserDetails user, @RequestBody GuestbookRequest req) {
+        Integer userId = user.getUser().getId();
         GuestbookResponse body = guestbookService.create(userId, req);
         URI location = URI.create("/api/guestbooks/" + body.getGuestbookId());
 
@@ -44,9 +46,8 @@ public class GuestbookController {
     // 방명록 삭제
     @UserOnly
     @DeleteMapping("/{guestbookId}")
-    public ResponseEntity<ApiResponseMessage> delete(Authentication authentication,
-                                                     @PathVariable Long guestbookId) {
-        Long userId = (Long) authentication.getPrincipal();
+    public ResponseEntity<ApiResponseMessage> delete(@CurrentUser CustomUserDetails user, @PathVariable Long guestbookId) {
+        Integer userId = user.getUser().getId();
         guestbookService.deleteMyGuestbook(userId, guestbookId);
         return ResponseEntity.ok(ApiResponseMessage.of("방명록이 삭제되었습니다."));
     }

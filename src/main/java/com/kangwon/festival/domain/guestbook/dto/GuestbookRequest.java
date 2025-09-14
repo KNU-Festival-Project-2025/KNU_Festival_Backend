@@ -7,7 +7,7 @@ import lombok.*;
 @NoArgsConstructor
 @AllArgsConstructor
 public class GuestbookRequest {
-    private Long userId;
+    private Integer userId;
     private String Nickname;
     private String content;
 }

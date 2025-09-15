@@ -49,14 +49,6 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
 
-//        String path = request.getRequestURI();
-//        for (String w : WHITELIST) {
-//            if (path.startsWith(w)) {
-//                filterChain.doFilter(request, response);
-//                return;
-//            }
-//        }
-
         try {
             val token = getAccessTokenFromRequest(request);
             if (hasText(token)) {

@@ -1,5 +1,6 @@
 package com.kangwon.festival.global.entity;
 
+import com.kangwon.festival.domain.user.entity.User;
 import com.kangwon.festival.global.exception.ServiceException;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
@@ -19,13 +20,7 @@ public class GuestbookInfo extends BaseTime {
 
     @ManyToOne
     @JoinColumn(name = "guestbook_user_id")
-    private UserInfo user;
-
-    @Column(nullable = false)
-    private boolean guestbookIsAnonymous = true;
-
-    @Column(nullable = false)
-    private String guestbookTitle;
+    private User user;
 
     @Column(nullable = false, columnDefinition = "TEXT")
     private String guestbookContent;
@@ -33,39 +28,25 @@ public class GuestbookInfo extends BaseTime {
     @Column(nullable = false)
     private boolean guestbookIsDeleted = false;
 
-    private GuestbookInfo(UserInfo user, boolean guestbookIsAnonymous, String guestbookTitle, String guestbookContent) {
+    private GuestbookInfo(User user, String guestbookContent) {
         this.user = user;
-        this.guestbookIsAnonymous = guestbookIsAnonymous;
-        this.guestbookTitle = guestbookTitle;
         this.guestbookContent = guestbookContent;
     }
 
-    public static GuestbookInfo create(UserInfo user, boolean guestbookIsAnonymous, String title, String content) {
-        if (title == null || title.isBlank()) {
-            throw new ServiceException(MISSING_REQUIRED_INPUT, "제목을 입력하세요.");
-        }
+    public static GuestbookInfo create(User user, String content) {
         if (content == null || content.isBlank()) {
             throw new ServiceException(MISSING_REQUIRED_INPUT, "내용을 입력하세요.");
         }
 
-        return new GuestbookInfo(user, guestbookIsAnonymous, title, content);
+        return new GuestbookInfo(user, content);
     }
 
-    public void changeTitle(String title) {
-        if (title == null || title.isBlank())
-            return;
-        this.guestbookTitle = title;
-    }
-
+    /*
     public void changeContent(String content) {
         if (content == null || content.isBlank())
             return;
         this.guestbookContent = content;
-    }
-
-    public void changeAnonymous(boolean anonymous) {
-        this.guestbookIsAnonymous = anonymous;
-    }
+    }*/
 
     public void deleted() {
         this.guestbookIsDeleted = true;

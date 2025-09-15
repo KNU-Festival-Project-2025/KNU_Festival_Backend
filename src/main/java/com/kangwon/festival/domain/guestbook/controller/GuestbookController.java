@@ -13,6 +13,7 @@ import com.kangwon.festival.global.dto.ApiResponseMessage;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.headers.Header;
 import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.ExampleObject;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
@@ -41,17 +42,23 @@ public class GuestbookController {
     @ApiResponse(
             responseCode = "201",
             description = "등록 성공",
-            content = @Content(
-                    schema = @Schema(implementation = ApiResponseDataOfGuestbookResponse.class)
-            ),
-            headers = {
-                    @Header(name = "Location", description = "생성된 리소스 URI", schema = @Schema(type = "string"))
-            }
-    )
-    @ApiResponse(
-            responseCode = "401",
-            description = "유효하지 않은 토큰",
-            content = @Content(schema = @Schema(implementation = ApiResponseMessage.class))
+            content = @Content(schema = @Schema(implementation = ApiResponseDataOfGuestbookResponse.class),
+                    examples = @ExampleObject(
+                            value = """
+                                    {
+                                      "code": 0,
+                                      "message": "방명록이 등록되었습니다.",
+                                      "data": {
+                                        "guestbookId": 2,
+                                        "nickname": "소연",
+                                        "content": "첫 방명록!",
+                                        "createdAt": "2025-09-14T11:35:43.029022",
+                                        "updatedAt": "2025-09-14T11:35:43.029022"
+                                      }
+                                    }
+                                    """
+                    )),
+            headers = {@Header(name = "Location", description = "생성된 리소스 URI", schema = @Schema(type = "string"))}
     )
     @UserOnly
     @PostMapping("/register")
@@ -83,11 +90,52 @@ public class GuestbookController {
 
     @UserOnly
     @DeleteMapping("/{guestbookId}")
-    @Operation(summary = "내 방명록 삭제")
+    @Operation(
+            summary = "내 방명록 삭제",
+            description = "Authorization 헤더에 Bearer Access Token을 포함해야 하며, 본인이 작성한 방명록만 삭제할 수 있습니다."
+    )
     @ApiResponse(
             responseCode = "200",
             description = "삭제 성공",
-            content = @Content(schema = @Schema(implementation = ApiResponseMessage.class))
+            content = @Content(
+                    schema = @Schema(implementation = ApiResponseMessage.class),
+                    examples = @ExampleObject(
+                            value = """
+                                    {
+                                        "code": 0,
+                                        "message": "방명록이 삭제되었습니다."
+                                    }
+                                    """
+                    ))
+    )
+    @ApiResponse(
+            responseCode = "403",
+            description = "본인 글이 아닌 경우 삭제 불가",
+            content = @Content(
+                    schema = @Schema(implementation = ApiResponseMessage.class),
+                    examples = @ExampleObject(
+                            value = """
+                                    {
+                                        "code": 40203,
+                                        "message": "본인이 작성한 방명록만 수정할 수 있습니다."
+                                    }
+                                    """
+                    ))
+
+    )
+    @ApiResponse(
+            responseCode = "404",
+            description = "리소스를 찾을 수 없음",
+            content = @Content(
+                    schema = @Schema(implementation = ApiResponseMessage.class),
+                    examples = @ExampleObject(
+                            value = """
+                                    {
+                                    "code": 40100,
+                                    "message": "해당 리소스를 찾을 수 없습니다."
+                                    }
+                                    """
+                    ))
     )
     public ResponseEntity<ApiResponseMessage> delete(@CurrentUser CustomUserDetails user, @PathVariable Long guestbookId) {
         Integer userId = user.getUser().getId();

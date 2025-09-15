@@ -36,14 +36,6 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
     private final CustomJwtAuthenticationEntryPoint authenticationEntryPoint;
     private final UserRepository userRepository;
 
-    // Swagger, public 경로 화이트리스트
-    private static final String[] WHITELIST = {
-            "/v3/api-docs", "/v3/api-docs/",
-            "/swagger-ui", "/swagger-ui/",
-            "/swagger-ui.html", "/swagger-ui/index.html",
-            "/error", "/actuator/health"
-    };
-
     /**
      * Same contract as for {@code doFilter}, but guaranteed to be just invoked once per request within a single request
      * thread. See {@link #shouldNotFilterAsyncDispatch()} for details.
@@ -57,13 +49,13 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
 
-        String path = request.getRequestURI();
-        for (String w : WHITELIST) {
-            if (path.startsWith(w)) {
-                filterChain.doFilter(request, response);
-                return;
-            }
-        }
+//        String path = request.getRequestURI();
+//        for (String w : WHITELIST) {
+//            if (path.startsWith(w)) {
+//                filterChain.doFilter(request, response);
+//                return;
+//            }
+//        }
 
         try {
             val token = getAccessTokenFromRequest(request);

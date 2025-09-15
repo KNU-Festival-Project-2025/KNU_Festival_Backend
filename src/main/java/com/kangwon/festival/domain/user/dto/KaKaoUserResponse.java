@@ -9,7 +9,7 @@ public record KaKaoUserResponse (
         String profileImgUrl
 )
 {
-    public static KaKaoUserResponse of(User user) {
+    public static KaKaoUserResponse from(User user) {
         return KaKaoUserResponse.builder()
                 .id(user.getKakaoId())
                 .profileImgUrl(user.getProfileImgUrl())

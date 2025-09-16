@@ -29,6 +29,13 @@ public enum Code {
     //유효하지 않은 리소스(40100 ~ 40199번대)
     CAN_NOT_FIND_RESOURCE(HttpStatus.BAD_REQUEST, 40100, "해당 리소스를 찾을 수 없습니다."),
 
+    NOT_FOUND_USER(HttpStatus.NOT_FOUND, 40101, "사용자를 찾을 수 없습니다."),
+    CAN_NOT_FIND_USER(HttpStatus.BAD_REQUEST, 40101, "해당 유저를 찾을 수 없습니다."),
+    CAN_NOT_FIND_BLOCKER_USER(HttpStatus.BAD_REQUEST, 40102, "차단한 사용자를 찾을 수 없습니다."),
+    CAN_NOT_FIND_BLOCKED_USER(HttpStatus.BAD_REQUEST, 40103, "차단된 사용자를 찾을 수 없습니다."),
+    NOT_FOUND_PHOTO(HttpStatus.NOT_FOUND, 40104, "사진 게시글을 찾을 수 없습니다."),
+    INVALID_FILE_TYPE(HttpStatus.UNSUPPORTED_MEDIA_TYPE, 40105, "허용되지 않은 파일 형식입니다."),
+    FORBIDDEN_PHOTO_DELETE(HttpStatus.FORBIDDEN, 40106, "본인의 게시글만 삭제할 수 있습니다."),
 
     //보안 관련(40200 ~ 40299번대)
     REQUIRED_LOGIN(HttpStatus.UNAUTHORIZED, 40200, "로그인이 필요합니다."),
@@ -40,6 +47,9 @@ public enum Code {
      * 500번대
      */
     INTERNAL_SERVER_ERROR(HttpStatus.INTERNAL_SERVER_ERROR, 500, "예기치 못한 서버 오류가 발생했습니다."),
+    FILE_UPLOAD_ERROR(HttpStatus.INTERNAL_SERVER_ERROR, 501, "파일 업로드를 실패하였습니다."),
+    DELETE_ERROR(HttpStatus.INTERNAL_SERVER_ERROR, 502, "데이터베이스 삭제를 실패하였습니다."),
+    STORAGE_DELETE_ERROR(HttpStatus.INTERNAL_SERVER_ERROR, 503, "GCR 이미지 삭제를 실패하였습니다."),
     ;
 
     private final HttpStatus status;

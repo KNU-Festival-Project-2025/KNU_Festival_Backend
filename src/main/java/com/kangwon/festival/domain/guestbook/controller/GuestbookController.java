@@ -63,7 +63,7 @@ public class GuestbookController {
     @UserOnly
     @PostMapping("/register")
     public ResponseEntity<ApiResponseData<GuestbookResponse>> create(@CurrentUser CustomUserDetails user, @RequestBody GuestbookRequest req) {
-        Integer userId = user.getUser().getId();
+        Long userId = user.getUser().getId();
         GuestbookResponse body = guestbookService.create(userId, req);
         URI location = URI.create("/api/guestbooks/" + body.getGuestbookId());
 
@@ -138,7 +138,7 @@ public class GuestbookController {
                     ))
     )
     public ResponseEntity<ApiResponseMessage> delete(@CurrentUser CustomUserDetails user, @PathVariable Long guestbookId) {
-        Integer userId = user.getUser().getId();
+        Long userId = user.getUser().getId();
         guestbookService.deleteMyGuestbook(userId, guestbookId);
         return ResponseEntity.ok(ApiResponseMessage.of("방명록이 삭제되었습니다."));
     }

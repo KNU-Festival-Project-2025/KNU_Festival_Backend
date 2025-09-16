@@ -53,7 +53,7 @@ public class CustomUserDetails implements UserDetails {
         return true;
     }
 
-    public Integer getId() {
+    public Long getId() {
         return user.getId();
     }
 }

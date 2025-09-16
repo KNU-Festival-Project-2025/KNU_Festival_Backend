@@ -49,7 +49,7 @@ public class AuthService {
 
         User user = getUser(kakaoAccessToken, request);
         Token token = getToken(user);
-        return SignInResponse.of(token);
+        return SignInResponse.from(token);
     }
 
     @MethodDescription(description = "신규 가입 검증(그룹)")
@@ -87,7 +87,7 @@ public class AuthService {
         Token token = generateToken(new UserAuthentication(user.getId(), null, null));
         user.updateRefreshToken(token.refreshToken());
 
-        return SignInResponse.of(token);
+        return SignInResponse.from(token);
     }
 
     @MethodDescription(description = "Kakao에서 유저 정보를 조회합니다.")

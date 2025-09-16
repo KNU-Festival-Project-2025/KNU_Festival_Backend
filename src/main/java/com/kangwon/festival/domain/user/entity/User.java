@@ -20,7 +20,7 @@ public class User extends BaseTime {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer id;
+    private Long id;
     private String kakaoId;
     private String refreshToken;
     private String profileImgUrl;

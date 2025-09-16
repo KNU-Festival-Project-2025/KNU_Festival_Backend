@@ -9,7 +9,7 @@ public record SignInResponse(
         @NonNull String accessToken,
         @NonNull String refreshToken
 ) {
-    public static SignInResponse of(Token token) {
+    public static SignInResponse from(Token token) {
         return SignInResponse.builder()
                 .accessToken(token.accessToken())
                 .refreshToken(token.refreshToken())

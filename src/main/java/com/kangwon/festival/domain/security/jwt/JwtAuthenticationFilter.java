@@ -36,7 +36,6 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
     private final CustomJwtAuthenticationEntryPoint authenticationEntryPoint;
     private final UserRepository userRepository;
 
-
     /**
      * Same contract as for {@code doFilter}, but guaranteed to be just invoked once per request within a single request
      * thread. See {@link #shouldNotFilterAsyncDispatch()} for details.
@@ -49,6 +48,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
      */
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
+
         try {
             val token = getAccessTokenFromRequest(request);
             if (hasText(token)) {

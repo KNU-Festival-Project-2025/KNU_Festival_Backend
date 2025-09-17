@@ -89,7 +89,7 @@ public class AuthService {
         Token token = generateToken(new UserAuthentication(user.getId(), null, null));
         user.updateRefreshToken(token.refreshToken());
 
-        return SignInResponse.of(token);
+        return SignInResponse.from(token);
     }
 
     @MethodDescription(description = "Kakao에서 유저 정보를 조회합니다.")

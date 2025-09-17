@@ -30,7 +30,7 @@ import org.springframework.transaction.annotation.Transactional;
 @RequiredArgsConstructor
 @Transactional(readOnly = true)
 public class AuthService {
-    private static final int ACCESS_TOKEN_EXPIRATION = 7200000;
+    private static final int ACCESS_TOKEN_EXPIRATION = 1800000;
     private static final int REFRESH_TOKEN_EXPIRATION = 1209600000;
 
     private final JwtTokenProvider jwtTokenProvider;

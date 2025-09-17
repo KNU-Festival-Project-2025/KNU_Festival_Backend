@@ -27,8 +27,6 @@ public class Photo extends BaseTime{
     private Long id;
     @Column(nullable = false)
     private String nickname;
-    @Column(nullable = false)
-    private String photoNickname;
     @Column(columnDefinition = "TEXT")
     private String imgUrl;
     @Column(columnDefinition = "TEXT")
@@ -42,9 +40,8 @@ public class Photo extends BaseTime{
     private User user;
 
     @Builder
-    public Photo(User user, String photoNickname, String nickname, String imgUrl, String originImgUrl, String content) {
+    public Photo(User user, String nickname, String imgUrl, String originImgUrl, String content) {
         this.user = user;
-        this.photoNickname = photoNickname;
         this.nickname = nickname;
         this.imgUrl = imgUrl;
         this.originImgUrl = originImgUrl;

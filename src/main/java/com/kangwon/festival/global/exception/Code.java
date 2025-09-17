@@ -39,6 +39,7 @@ public enum Code {
     NOT_FOUND_PHOTO(HttpStatus.NOT_FOUND, 40104, "사진 게시글을 찾을 수 없습니다."),
     INVALID_FILE_TYPE(HttpStatus.UNSUPPORTED_MEDIA_TYPE, 40105, "허용되지 않은 파일 형식입니다."),
     FORBIDDEN_PHOTO_DELETE(HttpStatus.FORBIDDEN, 40106, "본인의 게시글만 삭제할 수 있습니다."),
+    PHOTO_UPLOAD_LIMIT(HttpStatus.BAD_REQUEST, 40107, "사진 게시글은 최대 5개까지만 올릴 수 있습니다."),
 
     //보안 관련(40200 ~ 40299번대)
     REQUIRED_LOGIN(HttpStatus.UNAUTHORIZED, 40200, "로그인이 필요합니다."),

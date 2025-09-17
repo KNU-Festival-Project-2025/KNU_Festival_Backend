@@ -6,7 +6,6 @@ import lombok.Builder;
 @Builder
 public record PhotoResponse(
         Long id,
-        String photoNickname,
         String nickname,
         String imgUrl,
         String content,
@@ -18,7 +17,6 @@ public record PhotoResponse(
     public static PhotoResponse from(Photo photo) {
         return PhotoResponse.builder()
                 .id(photo.getId())
-                .photoNickname(photo.getPhotoNickname())
                 .nickname(photo.getNickname())
                 .imgUrl(photo.getImgUrl())
                 .content(photo.getContent())
@@ -31,7 +29,6 @@ public record PhotoResponse(
         boolean isDeletable = photo.getUser() != null && photo.getUser().getId().equals(currentUserId);
         return PhotoResponse.builder()
                 .id(photo.getId())
-                .photoNickname(photo.getPhotoNickname())
                 .nickname(photo.getNickname())
                 .imgUrl(photo.getImgUrl())
                 .content(photo.getContent())

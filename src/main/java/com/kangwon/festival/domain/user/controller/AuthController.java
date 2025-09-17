@@ -1,6 +1,7 @@
 package com.kangwon.festival.domain.user.controller;
 
 import com.kangwon.festival.domain.security.dto.CustomUserDetails;
+import com.kangwon.festival.domain.user.dto.LoginResponse;
 import com.kangwon.festival.domain.user.dto.SignInRequest;
 import com.kangwon.festival.domain.user.dto.SignInResponse;
 import com.kangwon.festival.domain.user.service.AuthService;
@@ -30,7 +31,7 @@ public class AuthController {
 
     @PostMapping("/login")
     public ResponseEntity<ApiResponseData> exchange(@Valid @RequestBody SignInRequest request) {
-        SignInResponse response = authService.signIn(request);
+        LoginResponse response = authService.signIn(request);
 
         return ResponseEntity.ok()
                 .header("X-Access-Token",  response.accessToken())

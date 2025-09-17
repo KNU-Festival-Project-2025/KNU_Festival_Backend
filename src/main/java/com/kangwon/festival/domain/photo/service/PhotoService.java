@@ -7,6 +7,7 @@ import com.kangwon.festival.domain.photo.exception.DatabaseDeleteException;
 import com.kangwon.festival.domain.photo.exception.ForbiddenPhotoDeleteException;
 import com.kangwon.festival.domain.photo.exception.InvalidFileTypeException;
 import com.kangwon.festival.domain.photo.exception.NotFoundPhotoException;
+import com.kangwon.festival.domain.photo.exception.PhotoLimitExceededException;
 import com.kangwon.festival.domain.photo.exception.StorageDeleteException;
 import com.kangwon.festival.domain.photo.exception.UploadFileException;
 import com.kangwon.festival.domain.photo.repository.PhotoRepository;
@@ -38,18 +39,19 @@ public class PhotoService {
     public ApiResponseMessage createPhoto(CustomUserDetails customUser, PhotoRequest request, MultipartFile file) {
         if (file == null || file.isEmpty()) throw new InvalidFileTypeException();
 
-        if (photoRepository.existsByPhotoNickname(request.nickname())) {
-            throw new DuplicateNicknameException();
+        User user = findUser(customUser);
+
+        long photoCount = photoRepository.countByUser(user);
+        if (photoCount >= 5) {
+            throw new PhotoLimitExceededException();
         }
 
         String fileUrl = gcsService.upload("photoImage", file);
-        User user = findUser(customUser);
         String nickname = user.getNickname();
 
         try {
             Photo photo = Photo.builder()
                     .user(user)
-                    .photoNickname(request.nickname())
                     .nickname(nickname)
                     .imgUrl(fileUrl)
                     .originImgUrl(file.getOriginalFilename())

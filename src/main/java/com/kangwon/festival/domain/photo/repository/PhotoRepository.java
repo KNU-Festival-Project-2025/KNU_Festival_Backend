@@ -1,6 +1,7 @@
 package com.kangwon.festival.domain.photo.repository;
 
 import com.kangwon.festival.domain.photo.entity.Photo;
+import com.kangwon.festival.domain.user.entity.User;
 import java.util.List;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
@@ -20,5 +21,5 @@ public interface PhotoRepository extends JpaRepository<Photo, Long> {
 
     List<Photo> findAllByOrderByLikeCountDesc();
     List<Photo> findAllByOrderByCreatedDateTimeDesc();
-    boolean existsByPhotoNickname(String photoNickname);
+    long countByUser(User user);
 }

@@ -2,6 +2,7 @@ package com.kangwon.festival.domain.user.service;
 
 import com.kangwon.festival.domain.security.dto.CustomUserDetails;
 import com.kangwon.festival.domain.user.dto.KaKaoUserResponse;
+import com.kangwon.festival.domain.user.dto.LoginResponse;
 import com.kangwon.festival.domain.user.dto.SignInRequest;
 import com.kangwon.festival.domain.user.dto.SignInResponse;
 import com.kangwon.festival.domain.security.dto.Token;
@@ -40,7 +41,7 @@ public class AuthService {
 
     @MethodDescription(description = "로그인/회원가입(신규 시만 닉네임·전화번호 검증 및 저장)")
     @Transactional
-    public SignInResponse signIn(SignInRequest request) {
+    public LoginResponse signIn(SignInRequest request) {
         String kakaoAccessToken = kakaoOAuthClient.exchangeCodeForAccessToken(request.code());
         KaKaoUserResponse kakao = kakaoService.getKakaoData(kakaoAccessToken);
         boolean isNew = !userRepository.existsByKakaoId(kakao.id());
@@ -49,7 +50,8 @@ public class AuthService {
 
         User user = getUser(kakaoAccessToken, request);
         Token token = getToken(user);
-        return SignInResponse.of(token);
+        String nickname = user.getNickname();
+        return LoginResponse.from(token, nickname);
     }
 
     @MethodDescription(description = "신규 가입 검증(그룹)")

@@ -12,6 +12,8 @@ import com.kangwon.festival.global.dto.ApiResponseData;
 import com.kangwon.festival.global.dto.ApiResponseMessage;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.ResponseCookie;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -33,10 +35,32 @@ public class AuthController {
     public ResponseEntity<ApiResponseData> exchange(@Valid @RequestBody SignInRequest request) {
         LoginResponse response = authService.signIn(request);
 
+        HttpHeaders headers = new HttpHeaders();
+        headers.add("X-Access-Token", response.accessToken());
+        headers.add("X-Refresh-Token", response.refreshToken());
+        headers.add("Access-Control-Expose-Headers", "X-Access-Token, X-Refresh-Token");
+
+        ResponseCookie accessCookie = ResponseCookie.from("access_token", response.accessToken())
+                .httpOnly(true)
+                .secure(true)
+                .sameSite("None")
+                .path("/")
+                .maxAge(1800)
+                .build();
+
+        ResponseCookie refreshCookie = ResponseCookie.from("refresh_token", response.refreshToken())
+                .httpOnly(true)
+                .secure(true)
+                .sameSite("None")
+                .path("/")
+                .maxAge(1209600)
+                .build();
+
+        headers.add(HttpHeaders.SET_COOKIE, accessCookie.toString());
+        headers.add(HttpHeaders.SET_COOKIE, refreshCookie.toString());
+
         return ResponseEntity.ok()
-                .header("X-Access-Token",  response.accessToken())
-                .header("X-Refresh-Token", response.refreshToken())
-                .header("Access-Control-Expose-Headers", "X-Access-Token, X-Refresh-Token")
+                .headers(headers)
                 .body(ApiResponseData.of(response, "정상적으로 로그인되었습니다."));
     }
 

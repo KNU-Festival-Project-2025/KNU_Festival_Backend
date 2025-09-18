@@ -42,6 +42,6 @@ public class PhotoController {
 
     @DeleteMapping("/{photoId}")
     public ResponseEntity<ApiResponseMessage> deletePhoto(@CurrentUser CustomUserDetails user, @PathVariable Long photoId) {
-        return photoService.deletePhoto(user, photoId);
+        return ResponseEntity.ok(photoService.deletePhoto(user, photoId));
     }
 }

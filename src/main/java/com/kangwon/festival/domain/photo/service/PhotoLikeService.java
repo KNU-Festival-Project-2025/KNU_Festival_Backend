@@ -25,6 +25,7 @@ public class PhotoLikeService {
     private final UserRepository userRepository;
     private final PhotoLikeRepository photoLikeRepository;
 
+    @MethodDescription(description = "좋아요 토글 기능")
     public ApiResponseMessage toggleLike(CustomUserDetails customUser, Long photoId) {
         User user = findUser(customUser);
         Long userId = Long.valueOf(user.getId());

@@ -47,17 +47,10 @@ public class PhotoService {
         }
 
         String fileUrl = gcsService.upload("photoImage", file);
-        String nickname = user.getNickname();
-
         try {
-            Photo photo = Photo.builder()
-                    .user(user)
-                    .nickname(nickname)
-                    .imgUrl(fileUrl)
-                    .originImgUrl(file.getOriginalFilename())
-                    .content(request.content())
-                    .build();
+            Photo photo = createPhoto(user, request, fileUrl, file);
             photoRepository.save(photo);
+
             return ApiResponseMessage.of("사진 게시글 저장에 성공하였습니다.");
         } catch (Exception e) {
             gcsService.deleteByUrl(fileUrl);
@@ -66,7 +59,7 @@ public class PhotoService {
     }
 
     @MethodDescription(description = "사진 게시글을 삭제합니다. (본인만 가능)")
-    public ResponseEntity<ApiResponseMessage> deletePhoto(CustomUserDetails customUser, Long photoId) {
+    public ApiResponseMessage deletePhoto(CustomUserDetails customUser, Long photoId) {
         Photo photo = photoFindById(photoId);
         Long currentUserId = Long.valueOf(findUser(customUser).getId());
 
@@ -78,7 +71,7 @@ public class PhotoService {
             photoRepository.flush();
 
             gcsService.deleteByUrl(photo.getImgUrl());
-            return ResponseEntity.ok(ApiResponseMessage.of("사진 게시글 삭제에 성공하였습니다."));
+            return ApiResponseMessage.of("사진 게시글 삭제에 성공하였습니다.");
         } catch (DataAccessException | PersistenceException e) {
             throw new DatabaseDeleteException();
         } catch (Exception e) {
@@ -117,5 +110,16 @@ public class PhotoService {
         return Optional.ofNullable(principal)
                 .map(CustomUserDetails::getUser)
                 .orElseThrow(NotFoundUserException::new);
+    }
+
+    @MethodDescription(description = "photo 객체를 반환합니다.")
+    private Photo createPhoto(User user, PhotoRequest request, String fileUrl, MultipartFile file) {
+        return Photo.builder()
+                .user(user)
+                .nickname(user.getNickname())
+                .imgUrl(fileUrl)
+                .originImgUrl(file.getOriginalFilename())
+                .content(request.content())
+                .build();
     }
 }

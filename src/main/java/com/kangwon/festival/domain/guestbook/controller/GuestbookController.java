@@ -18,6 +18,7 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -62,7 +63,7 @@ public class GuestbookController {
     )
     @UserOnly
     @PostMapping("/register")
-    public ResponseEntity<ApiResponseData<GuestbookResponse>> create(@CurrentUser CustomUserDetails user, @RequestBody GuestbookRequest req) {
+    public ResponseEntity<ApiResponseData<GuestbookResponse>> create(@CurrentUser CustomUserDetails user, @Valid @RequestBody GuestbookRequest req) {
         Long userId = user.getUser().getId();
         GuestbookResponse body = guestbookService.create(userId, req);
         URI location = URI.create("/api/guestbooks/" + body.getGuestbookId());

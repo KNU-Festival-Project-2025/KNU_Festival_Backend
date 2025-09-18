@@ -66,7 +66,7 @@ public class PhotoService {
     }
 
     @MethodDescription(description = "사진 게시글을 삭제합니다. (본인만 가능)")
-    public ResponseEntity<ApiResponseMessage> deletePhoto(CustomUserDetails customUser, Long photoId) {
+    public ApiResponseMessage deletePhoto(CustomUserDetails customUser, Long photoId) {
         Photo photo = photoFindById(photoId);
         Long currentUserId = Long.valueOf(findUser(customUser).getId());
 
@@ -78,7 +78,7 @@ public class PhotoService {
             photoRepository.flush();
 
             gcsService.deleteByUrl(photo.getImgUrl());
-            return ResponseEntity.ok(ApiResponseMessage.of("사진 게시글 삭제에 성공하였습니다."));
+            return ApiResponseMessage.of("사진 게시글 삭제에 성공하였습니다.");
         } catch (DataAccessException | PersistenceException e) {
             throw new DatabaseDeleteException();
         } catch (Exception e) {

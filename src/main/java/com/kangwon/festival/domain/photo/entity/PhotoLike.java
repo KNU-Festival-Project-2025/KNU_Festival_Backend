@@ -34,7 +34,9 @@ public class PhotoLike extends BaseTime {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @ManyToOne(fetch = FetchType.LAZY) @JoinColumn(name = "photo_id", nullable = false)
+    @ManyToOne(fetch = FetchType.LAZY) 
+    @JoinColumn(name = "photo_id", nullable = false)
+    @OnDelete(action = OnDeleteAction.CASCADE)
     private Photo photo;
 
     @ManyToOne(fetch = FetchType.LAZY) @JoinColumn(name = "user_id", nullable = false)

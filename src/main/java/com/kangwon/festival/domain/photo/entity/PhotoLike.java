@@ -41,7 +41,9 @@ public class PhotoLike extends BaseTime {
     @OnDelete(action = OnDeleteAction.CASCADE)
     private Photo photo;
 
-    @ManyToOne(fetch = FetchType.LAZY) @JoinColumn(name = "user_id", nullable = false)
+    @ManyToOne(fetch = FetchType.LAZY) 
+    @JoinColumn(name = "user_id", nullable = false)
+    @OnDelete(action = OnDeleteAction.CASCADE)
     private User user;
 
     @Builder
